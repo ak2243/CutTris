@@ -1,4 +1,7 @@
-import { Application, Sprite } from 'pixi.js'
+import { Container } from '@pixi/display';
+//import { Graphics } from '@pixi/graphics';
+import { Application } from 'pixi.js';
+import { makeRect } from './tetromino';
 
 const app = new Application({
 	view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
@@ -9,11 +12,11 @@ const app = new Application({
 	height: 480
 });
 
-const clampy: Sprite = Sprite.from("clampy.png");
+const conty: Container = new Container();
 
-clampy.anchor.set(0.5);
+const block = makeRect(100,100,50,50);
 
-clampy.x = app.screen.width / 2;
-clampy.y = app.screen.height / 2;
 
-app.stage.addChild(clampy);
+conty.addChild(block);
+app.stage.addChild(conty);
+
