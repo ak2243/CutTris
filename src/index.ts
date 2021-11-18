@@ -3,9 +3,10 @@ import { Graphics } from '@pixi/graphics';
 import { Application } from 'pixi.js';
 //import { makeRect } from './tetromino';
 
-function drawGrid(rows:number, columns: number, length:number, colorGrid: number[][]) : Graphics{
+function drawGrid(colorGrid: number[][]) : Graphics{
 
-	const pieceColors: number[] = [0xd1d1d1,//0 = open
+	const pieceColors: number[] = 
+		[0xd1d1d1,//0 = open
 		0x2BD4FF,//1 = I
 		0x001EFF,//2 = J
 		0xFFB10D,//3 = L
@@ -16,7 +17,10 @@ function drawGrid(rows:number, columns: number, length:number, colorGrid: number
 
 	let ret: Graphics = new Graphics();
 
-		
+	let rows = colorGrid.length;
+	let columns = colorGrid[0].length;
+	let length = window.innerHeight / (rows + 2);
+
 	for (let c = 0; c < columns; c++) {
 		for (let r = 0; r < rows; r++) {
 			ret.lineStyle(3,0xe1e1e1);
@@ -55,18 +59,18 @@ let colors : number[][] = //Representation for the board
  [0,0,0,0,0,0,0,0,0,0],
  [0,0,0,0,0,0,0,0,0,0],
  [0,0,0,0,0,0,0,0,0,0],
- [0,0,0,0,0,0,0,0,0,0],
- [0,0,0,0,0,0,0,0,0,0],
+ [0,0,0,0,0,4,4,0,0,0],
+ [0,0,0,0,0,4,4,0,0,0],
  [0,0,0,0,0,0,0,0,0,0], 
  [0,0,0,0,0,0,0,0,0,0],
  [0,0,0,0,0,0,0,0,0,0],
  [0,0,0,0,0,0,0,0,0,0],
  [0,0,0,0,0,0,0,0,0,0],
  [0,0,0,0,0,0,0,0,0,0],
- [0,0,0,0,0,0,0,0,0,0],
- [0,0,0,0,0,1,1,1,1,0]];
+ [0,2,0,0,0,0,0,0,0,0],
+ [0,2,2,2,0,1,1,1,1,0]];
 
-conty.addChild(drawGrid(20,10,(window.innerHeight)/22,colors));
+conty.addChild(drawGrid(colors));
 
 app.stage.addChild(conty);
 
