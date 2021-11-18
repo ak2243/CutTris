@@ -3,7 +3,7 @@ import { BagMaker } from "./BagMaker";
 class Logic {
     declare board: number[][];
     declare bagMaker:BagMaker;
-    declare 
+    //declare 
 
     constructor(rows: number, columns: number) {
         this.board = new Array<Array<number>>();
