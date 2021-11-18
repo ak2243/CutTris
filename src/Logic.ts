@@ -1,9 +1,11 @@
 import { BagMaker } from "./BagMaker";
+import * as Pieces from "./pieces";
 
-class Logic {
+export class Logic {
     declare board: number[][];
     declare bagMaker:BagMaker;
-    //declare 
+    declare centerBlockRow:number;
+    declare centerBlockCol:number;
 
     constructor(rows: number, columns: number) {
         this.board = new Array<Array<number>>();
@@ -15,6 +17,37 @@ class Logic {
         }
 
         this.bagMaker = new BagMaker(7);
+    }
+
+    public getBoard():number[][] {
+        return this.board;
+    }
+
+    newPiece():boolean {
+        let pieceType:number = this.bagMaker.nextPiece();
+        let piece:Pieces.Tetromino = new Pieces.Square;
+        switch(pieceType) {
+            
+            case 1:
+                
+            case 2:
+
+            case 3:
+                piece = new Pieces.Square;
+                break;
+            case 4:
+
+            case 5:
+
+            case 6:
+
+            case 7:
+
+        }
+
+        
+
+        return false;
     }
 
     

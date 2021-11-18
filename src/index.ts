@@ -1,7 +1,7 @@
 import { Container } from '@pixi/display';
 import { Graphics } from '@pixi/graphics';
 import { Application } from 'pixi.js';
-//import { makeRect } from './tetromino';
+import { Logic } from './Logic';
 
 function drawGrid(colorGrid: number[][]) : Graphics{
 
@@ -47,6 +47,8 @@ const app = new Application({
 const conty: Container = new Container();
 conty.x = window.innerWidth/2 - (10*window.innerHeight)/44;
 conty.y = 30;
+
+const logic:Logic = new Logic(20,10);
 
 let colors : number[][] = //Representation for the board
 [[0,0,0,0,0,0,0,0,0,0],
