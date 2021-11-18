@@ -36,6 +36,7 @@ export class Square extends Tetromino {
     }
 
     //Ignore rotation for the square, doesn't change anything
+    // @ts-ignore
     override rotate(amount:number): void {
         return;
     }
