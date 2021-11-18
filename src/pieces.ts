@@ -1,7 +1,6 @@
 export abstract class Tetromino {
     declare orientation: number;
     declare rotations: number[][][];
-    declare colorCode: number;//Logical code used to represent this kind of piece
 
     constructor() {
         this.orientation = 0;
@@ -17,11 +16,12 @@ export abstract class Tetromino {
             this.orientation += this.rotations.length;
         }
     }
+
+    
 }
 
 export class Square extends Tetromino {
 
-    override colorCode = 3
     override rotations = [//Square only has one orientation
         [
             [0,0],
