@@ -16,11 +16,12 @@ export class Logic {
             }
         }
 
-        this.centerBlockRow = 7;
-        this.centerBlockCol = 3;
-        let piece = new Pieces.Square();
+        this.centerBlockRow = 2;
+        this.centerBlockCol = 5;
+        let piece = new Pieces.ZPiece();
+        piece.rotate(4);
         piece.getLayout().forEach(block => {
-            this.board[this.centerBlockRow + block[0]][this.centerBlockCol + block[1]] = 3
+            this.board[this.centerBlockRow + block[0]][this.centerBlockCol + block[1]] = 7
         });
 
         this.bagMaker = new BagMaker(7);

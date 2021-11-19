@@ -13,7 +13,7 @@ function drawGrid(colorGrid: number[][]) : Graphics{
 		0xE9FF00,//4 = O 
 		0xE612FF,//5 = T 
 		0x1BC000,//6 = S 
-		0xFF2B09];//7 = Z
+		0xFF3333];//7 = Z
 
 	let ret: Graphics = new Graphics();
 
@@ -23,7 +23,7 @@ function drawGrid(colorGrid: number[][]) : Graphics{
 
 	for (let c = 0; c < columns; c++) {
 		for (let r = 0; r < rows; r++) {
-			ret.lineStyle(3,0xc1c1c1);
+			ret.lineStyle(2,0xc1c1c1);
 			ret.beginFill(pieceColors[colorGrid[r][c]])
 			ret.drawRect(c*length, r*length, length,length);
 			ret.endFill();
