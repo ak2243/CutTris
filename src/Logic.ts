@@ -16,6 +16,14 @@ export class Logic {
             }
         }
 
+        this.centerBlockRow = 2;
+        this.centerBlockCol = 5;
+        let piece = new Pieces.ZPiece();
+        piece.rotate(4);
+        piece.getLayout().forEach(block => {
+            this.board[this.centerBlockRow + block[0]][this.centerBlockCol + block[1]] = 7
+        });
+
         this.bagMaker = new BagMaker(7);
     }
 
@@ -25,7 +33,7 @@ export class Logic {
 
     newPiece():boolean {
         let pieceType:number = this.bagMaker.nextPiece();
-        let piece:Pieces.Tetromino = new Pieces.Square;
+        //let piece:Pieces.Tetromino = new Pieces.Square;
         switch(pieceType) {
             
             case 1:
@@ -33,7 +41,7 @@ export class Logic {
             case 2:
 
             case 3:
-                piece = new Pieces.Square;
+                //piece = new Pieces.Square;
                 break;
             case 4:
 

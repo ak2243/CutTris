@@ -1,7 +1,6 @@
 export abstract class Tetromino {
     declare orientation: number;
     declare rotations: number[][][];
-    declare colorCode: number;//Logical code used to represent this kind of piece
 
     constructor() {
         this.orientation = 0;
@@ -12,16 +11,122 @@ export abstract class Tetromino {
     }
     
     rotate(amount:number): void {//Adding 1 is a clockwise rotation, subtracting 1 is a counter-clockwise rotation
-        this.orientation += amount;
+        this.orientation = (this.orientation + amount) % this.rotations.length;
         if(this.orientation < 0) {//Loop back around
             this.orientation += this.rotations.length;
         }
+    }
+
+    
+}
+
+export class Line extends Tetromino {
+
+    override rotations = [//Square only has one orientation
+        [
+            [0,0],
+            [0,-2],
+            [0,-1],
+            [0,1]
+        ],
+        [
+            [-1,0],
+            [0,0],
+            [1,0],
+            [2,0]
+        ],
+        [
+            [1,0],
+            [1,-2],
+            [1,-1],
+            [1,1]
+        ],
+        [
+            [-1,-1],
+            [0,-1],
+            [1,-1],
+            [2,-1]
+        ]
+        
+    ]
+    constructor() {
+        super();
+        
+    }
+}
+
+export class JPiece extends Tetromino {
+
+    override rotations = [//Square only has one orientation
+        [
+            [0,0],
+            [-1,-1],
+            [0,-1],
+            [0,1]
+        ],
+        [
+            [0,0],
+            [-1,1],
+            [-1,0],
+            [1,0]
+        ],
+        [
+            [0,0],
+            [1,1],
+            [0,1],
+            [0,-1]
+        ],
+        [
+            [0,0],
+            [1,-1],
+            [1,0],
+            [-1,0]
+        ]
+        
+    ]
+    constructor() {
+        super();
+        
+    }
+}
+
+export class LPiece extends Tetromino {
+
+    override rotations = [//Square only has one orientation
+        [
+            [0,0],
+            [1,-1],
+            [0,-1],
+            [0,1]
+        ],
+        [
+            [0,0],
+            [-1,-1],
+            [-1,0],
+            [1,0]
+        ],
+        [
+            [0,0],
+            [-1,1],
+            [0,1],
+            [0,-1]
+        ],
+        [
+            [0,0],
+            [1,1],
+            [1,0],
+            [-1,0]
+        ]
+        
+    ]
+    constructor() {
+        super();
+        
     }
 }
 
 export class Square extends Tetromino {
 
-    override colorCode = 3
     override rotations = [//Square only has one orientation
         [
             [0,0],
@@ -41,4 +146,109 @@ export class Square extends Tetromino {
         return;
     }
 
+}
+
+export class TPiece extends Tetromino {
+
+    override rotations = [//Square only has one orientation
+        [
+            [0,0],
+            [0,-1],
+            [0,1],
+            [-1,0]
+        ],
+        [
+            [0,0],
+            [0,1],
+            [-1,0],
+            [1,0]
+        ],
+        [
+            [0,0],
+            [0,-1],
+            [0,1],
+            [1,0]
+        ],
+        [
+            [0,0],
+            [0,-1],
+            [-1,0],
+            [1,0]
+        ]
+        
+    ]
+    constructor() {
+        super();
+        
+    }
+}
+
+export class SPiece extends Tetromino {
+
+    override rotations = [//Square only has one orientation
+        [
+            [0,0],
+            [-1,0],
+            [-1,1],
+            [0,-1]
+        ],
+        [
+            [0,0],
+            [0,1],
+            [-1,0],
+            [1,1]
+        ],
+        [
+            [0,0],
+            [1,-1],
+            [0,1],
+            [1,0]
+        ],
+        [
+            [0,0],
+            [-1,-1],
+            [0,-1],
+            [1,0]
+        ]
+        
+    ]
+    constructor() {
+        super();
+        
+    }
+}
+
+export class ZPiece extends Tetromino {
+
+    override rotations = [
+        [
+            [0,0],
+            [-1,0],
+            [-1,-1],
+            [0,1]
+        ],
+        [
+            [0,0],
+            [1,0],
+            [0,1],
+            [-1,1]
+        ],
+        [
+            [0,0],
+            [0,-1],
+            [1,1],
+            [1,0]
+        ],
+        [
+            [0,0],
+            [1,-1],
+            [0,-1],
+            [-1,0]
+        ]
+        
+    ]
+    constructor() {
+        super();
+        
+    }
 }
