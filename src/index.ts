@@ -60,14 +60,18 @@ document.addEventListener("keydown", keyInput);
 
 function keyInput(e: KeyboardEvent): void {
 	switch (e.code) {
-		case "Space": 
-			console.log("hard drop");
-			break;
 		case "ArrowRight":
-			logic.movePiece(1,0);
+			logic.movePieceHorizontal(true);
 			break;
 		case "ArrowLeft":
-			logic.movePiece(-1, 0);
+			logic.movePieceHorizontal(false);
+			break;
+		case "Space":
+			logic.movePieceVertical(true);
+			break;
+		case "ArrowDown":
+			console.log("down");
+			logic.movePieceVertical(false);
 			break;
 	}
 	conty.removeChild(grid);

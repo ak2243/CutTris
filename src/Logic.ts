@@ -30,25 +30,60 @@ export class Logic {
     }
 
 
-    public clearCurrPiece():void {
+    private clearCurrPiece():void {
         this.currPiece.getLayout().forEach(block => {
             this.board[this.centerBlockRow + block[0]][this.centerBlockCol + block[1]] = 0;
         });
     }
 
-    public drawCurrPiece():void {
+    private drawCurrPiece():void {
         this.currPiece.getLayout().forEach(block => {
-            this.board[this.centerBlockRow + block[0]][this.centerBlockCol + block[1]] = 7
+            this.board[this.centerBlockRow + block[0]][this.centerBlockCol + block[1]] = 7;
         });
     }
 
-    public movePiece(right: number, down: number):void {
-        this.clearCurrPiece(); // clear current position
-        // update piece coordinates
-        this.centerBlockCol += right;
-        this.centerBlockRow += down;
-        console.log(this.centerBlockRow + " " + this.centerBlockCol);
-        this.drawCurrPiece(); // redraw
+    public movePieceHorizontal(moveRight: boolean): void {
+        let c:number = this.centerBlockCol;
+        if(moveRight) {
+            c++;
+        } else {
+            c--;
+        }
+
+        let outOfBounds:boolean = false;
+        this.currPiece.getLayout().forEach(block => {
+            if ((c + block[1] < 0) || (c + block[1] > this.board[0].length - 1)) {
+                outOfBounds = true;
+            }
+        });
+
+        if (!outOfBounds && c != this.centerBlockCol) {
+            this.clearCurrPiece();
+            this.centerBlockCol = c;
+            this.drawCurrPiece();
+        }
+    }
+
+    public movePieceVertical(hardDrop: boolean): void {
+        let r:number = this.centerBlockRow;
+        if(hardDrop) {
+            // TODO: hard drop
+        } else {
+            r++;
+        }
+
+        let outOfBounds:boolean = false;
+        this.currPiece.getLayout().forEach(block => {
+            if (r + block[0] > this.board.length - 1) {
+                outOfBounds = true;
+            }
+        });
+
+        if (!outOfBounds && r != this.centerBlockRow) {
+            this.clearCurrPiece();
+            this.centerBlockRow = r;
+            this.drawCurrPiece();
+        }
     }
 
     public getBoard():number[][] {
