@@ -50,6 +50,32 @@ conty.y = 30;
 
 const logic:Logic = new Logic(20,10);
 
+let grid:Graphics = drawGrid(logic.getBoard());
+
+conty.addChild(drawGrid(logic.getBoard()));
+app.stage.addChild(conty);
+
+document.addEventListener("keydown", keyInput);
+
+
+function keyInput(e: KeyboardEvent): void {
+	switch (e.code) {
+		case "Space": 
+			console.log("hard drop");
+			break;
+		case "ArrowRight":
+			logic.movePiece(1,0);
+			break;
+		case "ArrowLeft":
+			logic.movePiece(-1, 0);
+			break;
+	}
+	conty.removeChild(grid);
+	grid = drawGrid(logic.getBoard())
+	conty.addChild(grid);
+}
+
+
 // let colors : number[][] = //Representation for the board
 // [[0,0,0,0,0,0,0,0,0,0],
 //  [0,0,0,0,0,0,0,0,0,0],
@@ -72,9 +98,6 @@ const logic:Logic = new Logic(20,10);
 //  [0,2,0,0,0,0,0,0,0,0],
 //  [0,2,2,2,0,1,1,1,1,0]];
 
-conty.addChild(drawGrid(logic.getBoard()));
-
-app.stage.addChild(conty);
 
 
 

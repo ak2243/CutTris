@@ -6,6 +6,7 @@ export class Logic {
     declare bagMaker:BagMaker;
     declare centerBlockRow:number;
     declare centerBlockCol:number;
+    declare currPiece:Pieces.Tetromino;
 
     constructor(rows: number, columns: number) {
         this.board = new Array<Array<number>>();
@@ -16,15 +17,38 @@ export class Logic {
             }
         }
 
-        this.centerBlockRow = 2;
-        this.centerBlockCol = 5;
-        let piece = new Pieces.ZPiece();
-        piece.rotate(4);
-        piece.getLayout().forEach(block => {
+        this.currPiece = new Pieces.ZPiece();
+        this.currPiece.rotate(1);
+        this.centerBlockRow = 5;
+        this.centerBlockCol = 1;
+        this.drawCurrPiece();
+        this.clearCurrPiece();
+        this.currPiece.rotate(2);
+        this.drawCurrPiece();
+        
+        this.bagMaker = new BagMaker(7);
+    }
+
+
+    public clearCurrPiece():void {
+        this.currPiece.getLayout().forEach(block => {
+            this.board[this.centerBlockRow + block[0]][this.centerBlockCol + block[1]] = 0;
+        });
+    }
+
+    public drawCurrPiece():void {
+        this.currPiece.getLayout().forEach(block => {
             this.board[this.centerBlockRow + block[0]][this.centerBlockCol + block[1]] = 7
         });
+    }
 
-        this.bagMaker = new BagMaker(7);
+    public movePiece(right: number, down: number):void {
+        this.clearCurrPiece(); // clear current position
+        // update piece coordinates
+        this.centerBlockCol += right;
+        this.centerBlockRow += down;
+        console.log(this.centerBlockRow + " " + this.centerBlockCol);
+        this.drawCurrPiece(); // redraw
     }
 
     public getBoard():number[][] {
