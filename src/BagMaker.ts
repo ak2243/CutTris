@@ -20,7 +20,8 @@ export class BagMaker {
             this.index = 0;
             this.bag = this.shuffle(this.orderedPieces);
         }
-        return this.bag[this.index++];
+        this.index++;
+        return this.bag[this.index - 1];
 
     }
 
