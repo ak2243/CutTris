@@ -3,16 +3,16 @@ import * as Pieces from "./pieces";
 
 export class Logic {
     declare board: number[][];
-    declare bagMaker:BagMaker;
-    declare centerBlockRow:number;
-    declare centerBlockCol:number;
-    declare currPiece:Pieces.Tetromino;
+    declare bagMaker: BagMaker;
+    declare centerBlockRow: number;
+    declare centerBlockCol: number;
+    declare currPiece: Pieces.Tetromino;
 
     constructor(rows: number, columns: number) {
         this.board = new Array<Array<number>>();
-        for( let r:number = 0; r < rows; r++) {
+        for (let r: number = 0; r < rows; r++) {
             this.board[r] = new Array<number>();
-            for(let c:number = 0; c < columns; c++) {
+            for (let c: number = 0; c < columns; c++) {
                 this.board[r][c] = 0;
             }
         }
@@ -25,32 +25,46 @@ export class Logic {
         this.clearCurrPiece();
         this.currPiece.rotate(2);
         this.drawCurrPiece();
-        
+
         this.bagMaker = new BagMaker(7);
+
+        var myTimer = setInterval(this.passiveFalling, 1000);
     }
 
 
-    private clearCurrPiece():void {
+    private clearCurrPiece(): void {
         this.currPiece.getLayout().forEach(block => {
             this.board[this.centerBlockRow + block[0]][this.centerBlockCol + block[1]] = 0;
         });
     }
 
-    private drawCurrPiece():void {
+    private drawCurrPiece(): void {
         this.currPiece.getLayout().forEach(block => {
             this.board[this.centerBlockRow + block[0]][this.centerBlockCol + block[1]] = 7;
         });
     }
 
+    public rotateRight(): void {
+        this.clearCurrPiece();
+        this.currPiece.rotate(1);
+        this.drawCurrPiece();
+    }
+
+    public rotateLeft(): void {
+        this.clearCurrPiece();
+        this.currPiece.rotate(-1);
+        this.drawCurrPiece();
+    }
+
     public movePieceHorizontal(moveRight: boolean): void {
-        let c:number = this.centerBlockCol;
-        if(moveRight) {
+        let c: number = this.centerBlockCol;
+        if (moveRight) {
             c++;
         } else {
             c--;
         }
 
-        let outOfBounds:boolean = false;
+        let outOfBounds: boolean = false;
         this.currPiece.getLayout().forEach(block => {
             if ((c + block[1] < 0) || (c + block[1] > this.board[0].length - 1)) {
                 outOfBounds = true;
@@ -64,21 +78,27 @@ export class Logic {
         }
     }
 
+    public passiveFalling(): void {
+        console.log("fall");
+        // TODO: get this to actually make it fall
+    }
+
     public movePieceVertical(hardDrop: boolean): void {
-        let r:number = this.centerBlockRow;
-        if(hardDrop) {
+        let r: number = this.centerBlockRow;
+        if (hardDrop) {
             // TODO: hard drop
         } else {
             r++;
         }
 
-        let outOfBounds:boolean = false;
+        let outOfBounds: boolean = false;
         this.currPiece.getLayout().forEach(block => {
             if (r + block[0] > this.board.length - 1) {
                 outOfBounds = true;
             }
         });
 
+        // TODO: this is probably the place to check for collisions/placement
         if (!outOfBounds && r != this.centerBlockRow) {
             this.clearCurrPiece();
             this.centerBlockRow = r;
@@ -86,17 +106,17 @@ export class Logic {
         }
     }
 
-    public getBoard():number[][] {
+    public getBoard(): number[][] {
         return this.board;
     }
 
-    newPiece():boolean {
-        let pieceType:number = this.bagMaker.nextPiece();
+    newPiece(): boolean {
+        let pieceType: number = this.bagMaker.nextPiece();
         //let piece:Pieces.Tetromino = new Pieces.Square;
-        switch(pieceType) {
-            
+        switch (pieceType) {
+
             case 1:
-                
+
             case 2:
 
             case 3:
@@ -112,12 +132,12 @@ export class Logic {
 
         }
 
-        
+
 
         return false;
     }
 
-    
+
 
 
 

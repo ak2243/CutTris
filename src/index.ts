@@ -70,8 +70,15 @@ function keyInput(e: KeyboardEvent): void {
 			logic.movePieceVertical(true);
 			break;
 		case "ArrowDown":
-			console.log("down");
 			logic.movePieceVertical(false);
+			break;
+		case "KeyZ":
+			console.log("rotate left");
+			logic.rotateLeft();
+			break;
+		case "KeyX":
+			console.log("rotate right");
+			logic.rotateRight();
 			break;
 	}
 	conty.removeChild(grid);
