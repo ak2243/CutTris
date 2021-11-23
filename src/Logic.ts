@@ -17,18 +17,18 @@ export class Logic {
             }
         }
 
-        this.currPiece = new Pieces.ZPiece();
-        this.currPiece.rotate(1);
-        this.centerBlockRow = 5;
-        this.centerBlockCol = 1;
-        this.drawCurrPiece();
-        this.clearCurrPiece();
-        this.currPiece.rotate(2);
-        this.drawCurrPiece();
+        this.makeNextPiece();
 
         this.bagMaker = new BagMaker(7);
 
         var myTimer = setInterval(this.passiveFalling, 1000);
+    }
+
+    private makeNextPiece(): void {
+        this.currPiece = new Pieces.ZPiece(); // Replace with random from BagMaker
+        this.centerBlockRow = 1;
+        this.centerBlockCol = 4;
+        this.drawCurrPiece();
     }
 
     private checkPiecePosition(): boolean {//Returns if the block's current position would conflict with any other blocks. 
@@ -61,7 +61,7 @@ export class Logic {
 
     private drawCurrPiece(): void {
         this.currPiece.getLayout().forEach(block => {
-            this.board[this.centerBlockRow + block[0]][this.centerBlockCol + block[1]] = 7;
+            this.board[this.centerBlockRow + block[0]][this.centerBlockCol + block[1]] = this.currPiece.pieceType;
         });
     }
 
@@ -112,30 +112,26 @@ export class Logic {
     }
 
     public movePieceVertical(hardDrop: boolean): void {
+        this.clearCurrPiece();
         let r: number = this.centerBlockRow;
         if (hardDrop) {
-            this.clearCurrPiece();
             while(this.checkPiecePosition()) {
                 this.centerBlockRow++;
             }
             this.centerBlockRow--;
             this.drawCurrPiece();
+            this.makeNextPiece();
             return;
 
         } else {
-            r++;
+            this.centerBlockRow++;
         }
 
-        let outOfBounds: boolean = false;
-        this.currPiece.getLayout().forEach(block => {
-            if (r + block[0] > this.board.length - 1) {
-                outOfBounds = true;
-            }
-        });
-
         // TODO: this is probably the place to check for collisions/placement
-        if (!outOfBounds && r != this.centerBlockRow) {
-            this.clearCurrPiece();
+        if (this.checkPiecePosition() && r != this.centerBlockRow) {
+            this.drawCurrPiece();
+            console.log(r + " " + this.centerBlockRow);
+        } else {
             this.centerBlockRow = r;
             this.drawCurrPiece();
         }
