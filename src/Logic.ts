@@ -114,7 +114,6 @@ export class Logic {
     public movePieceVertical(hardDrop: boolean): void {
         let r: number = this.centerBlockRow;
         if (hardDrop) {
-            // TODO: hard drop
             this.clearCurrPiece();
             while(this.checkPiecePosition()) {
                 this.centerBlockRow++;
