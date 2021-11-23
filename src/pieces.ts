@@ -1,6 +1,7 @@
 export abstract class Tetromino {
     declare orientation: number;
     declare rotations: number[][][];
+    declare pieceType:number;
 
     constructor() {
         this.orientation = 0;
@@ -21,6 +22,7 @@ export abstract class Tetromino {
 }
 
 export class Line extends Tetromino {
+    override pieceType = 1
 
     override rotations = [//Square only has one orientation
         [
@@ -56,6 +58,7 @@ export class Line extends Tetromino {
 }
 
 export class JPiece extends Tetromino {
+    override pieceType = 2;
 
     override rotations = [//Square only has one orientation
         [
@@ -91,6 +94,7 @@ export class JPiece extends Tetromino {
 }
 
 export class LPiece extends Tetromino {
+    override pieceType = 3;
 
     override rotations = [//Square only has one orientation
         [
@@ -126,6 +130,7 @@ export class LPiece extends Tetromino {
 }
 
 export class Square extends Tetromino {
+    override pieceType = 4
 
     override rotations = [//Square only has one orientation
         [
@@ -149,6 +154,7 @@ export class Square extends Tetromino {
 }
 
 export class TPiece extends Tetromino {
+    override pieceType = 5;
 
     override rotations = [//Square only has one orientation
         [
@@ -184,6 +190,7 @@ export class TPiece extends Tetromino {
 }
 
 export class SPiece extends Tetromino {
+    override pieceType = 6;
 
     override rotations = [//Square only has one orientation
         [
@@ -219,7 +226,8 @@ export class SPiece extends Tetromino {
 }
 
 export class ZPiece extends Tetromino {
-
+    override pieceType = 7;
+    
     override rotations = [
         [
             [0,0],

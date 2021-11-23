@@ -73,11 +73,11 @@ function keyInput(e: KeyboardEvent): void {
 			logic.movePieceVertical(false);
 			break;
 		case "KeyZ":
-			console.log("rotate left");
+			//console.log("rotate left");
 			logic.rotateLeft();
 			break;
 		case "KeyX":
-			console.log("rotate right");
+			//console.log("rotate right");
 			logic.rotateRight();
 			break;
 	}
@@ -85,30 +85,3 @@ function keyInput(e: KeyboardEvent): void {
 	grid = drawGrid(logic.getBoard())
 	conty.addChild(grid);
 }
-
-
-// let colors : number[][] = //Representation for the board
-// [[0,0,0,0,0,0,0,0,0,0],
-//  [0,0,0,0,0,0,0,0,0,0],
-//  [0,0,0,0,5,0,0,0,0,0],
-//  [0,0,0,5,5,5,0,0,0,0],
-//  [0,0,0,0,0,0,0,0,0,0],
-//  [0,0,0,0,0,0,0,0,0,0],
-//  [0,0,0,0,0,0,0,0,0,0],
-//  [0,0,0,0,0,0,0,0,0,0],
-//  [0,0,0,0,0,0,0,0,0,0],
-//  [0,0,0,0,0,0,0,0,0,0],
-//  [0,0,0,0,0,4,4,0,0,0],
-//  [0,0,0,0,0,4,4,0,0,0],
-//  [0,0,0,0,0,0,0,0,0,0], 
-//  [0,0,0,0,0,0,0,0,0,0],
-//  [0,0,0,0,0,0,0,0,0,0],
-//  [0,0,0,0,0,0,0,0,0,0],
-//  [0,0,0,0,0,0,0,0,0,0],
-//  [0,0,0,0,0,0,0,0,0,0],
-//  [0,2,0,0,0,0,0,0,0,0],
-//  [0,2,2,2,0,1,1,1,1,0]];
-
-
-
-

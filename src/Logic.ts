@@ -31,6 +31,27 @@ export class Logic {
         var myTimer = setInterval(this.passiveFalling, 1000);
     }
 
+    private checkPiecePosition(): boolean {//Returns if the block's current position would conflict with any other blocks. 
+        //IMPORTANT: This must be run BEFORE drawCurrPiece
+        
+        for(let block of this.currPiece.getLayout()) {
+            let blockRow = this.centerBlockRow + block[0];
+            let blockCol = this.centerBlockCol + block[1];
+            if(blockRow < 0 || blockRow >= this.board.length) {//Check if the row is out of bounds
+                return false;
+            }
+
+            if(blockCol < 0 || blockCol >= this.board[0].length) {//Check if the column is out of bounds
+                return false;
+            }
+
+            if(this.board[blockRow][blockCol] != 0) {//Check if that square is already occupied
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     private clearCurrPiece(): void {
         this.currPiece.getLayout().forEach(block => {
@@ -45,14 +66,21 @@ export class Logic {
     }
 
     public rotateRight(): void {
+
         this.clearCurrPiece();
         this.currPiece.rotate(1);
+        if(!this.checkPiecePosition()) {
+            this.currPiece.rotate(-1);
+        }
         this.drawCurrPiece();
     }
 
     public rotateLeft(): void {
         this.clearCurrPiece();
         this.currPiece.rotate(-1);
+        if(!this.checkPiecePosition()) {
+            this.currPiece.rotate(1);
+        }
         this.drawCurrPiece();
     }
 
@@ -87,6 +115,14 @@ export class Logic {
         let r: number = this.centerBlockRow;
         if (hardDrop) {
             // TODO: hard drop
+            this.clearCurrPiece();
+            while(this.checkPiecePosition()) {
+                this.centerBlockRow++;
+            }
+            this.centerBlockRow--;
+            this.drawCurrPiece();
+            return;
+
         } else {
             r++;
         }
