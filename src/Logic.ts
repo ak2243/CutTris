@@ -7,8 +7,12 @@ export class Logic {
     declare centerBlockRow: number;
     declare centerBlockCol: number;
     declare currPiece: Pieces.Tetromino;
+    declare rows:number;
+    declare cols: number;
 
     constructor(rows: number, columns: number) {
+        this.rows = rows;
+        this.cols = columns;
         this.board = new Array<Array<number>>();
         for (let r: number = 0; r < rows; r++) {
             this.board[r] = new Array<number>();
@@ -137,6 +141,7 @@ export class Logic {
             }
             this.centerBlockRow--;
             this.drawCurrPiece();
+            this.checkClear();
             this.makeNextPiece();
             return;
 
@@ -157,36 +162,25 @@ export class Logic {
         return this.board;
     }
 
-    newPiece(): boolean {
-        let pieceType: number = this.bagMaker.nextPiece();
-        //let piece:Pieces.Tetromino = new Pieces.Square;
-        switch (pieceType) {
+    public checkClear(): void {
+        for (let i = 0; i < this.board.length; i++) {
+            let full:boolean = true;
+            this.board[i].forEach(element => {
+                if (element == 0) {
+                    full = false;
+                }
+            });
 
-            case 1:
-
-            case 2:
-
-            case 3:
-                //piece = new Pieces.Square;
-                break;
-            case 4:
-
-            case 5:
-
-            case 6:
-
-            case 7:
-
+            if (full) {
+                this.board.splice(i, 1);
+                let blankLine:number[] = new Array<number>();
+                for (let x = 0; x < this.cols; x++) {
+                    blankLine[x] = 0;
+                }
+                console.log(blankLine);
+                this.board.unshift(blankLine);
+            }
         }
-
-
-
-        return false;
     }
-
-
-
-
-
 
 }
