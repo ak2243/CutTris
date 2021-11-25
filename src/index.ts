@@ -3,17 +3,17 @@ import { Graphics } from '@pixi/graphics';
 import { Application } from 'pixi.js';
 import { Logic } from './Logic';
 
-function drawGrid(colorGrid: number[][]) : Graphics{
+function drawGrid(colorGrid: number[][]): Graphics {
 
-	const pieceColors: number[] = 
+	const pieceColors: number[] =
 		[0xa1a1a1,//0 = open
-		0x2BD4FF,//1 = I
-		0x001EFF,//2 = J
-		0xFFB10D,//3 = L
-		0xE9FF00,//4 = O 
-		0xE612FF,//5 = T 
-		0x1BC000,//6 = S 
-		0xFF3333];//7 = Z
+			0x2BD4FF,//1 = I
+			0x001EFF,//2 = J
+			0xFFB10D,//3 = L
+			0xE9FF00,//4 = O 
+			0xE612FF,//5 = T 
+			0x1BC000,//6 = S 
+			0xFF3333];//7 = Z
 
 	let ret: Graphics = new Graphics();
 
@@ -23,9 +23,9 @@ function drawGrid(colorGrid: number[][]) : Graphics{
 
 	for (let c = 0; c < columns; c++) {
 		for (let r = 0; r < rows; r++) {
-			ret.lineStyle(2,0xc1c1c1);
+			ret.lineStyle(2, 0xc1c1c1);
 			ret.beginFill(pieceColors[colorGrid[r][c]])
-			ret.drawRect(c*length, r*length, length,length);
+			ret.drawRect(c * length, r * length, length, length);
 			ret.endFill();
 		}
 	}
@@ -45,43 +45,70 @@ const app = new Application({
 
 
 const conty: Container = new Container();
-conty.x = window.innerWidth/2 - (10*window.innerHeight)/44;
+conty.x = window.innerWidth / 2 - (10 * window.innerHeight) / 44;
 conty.y = 30;
 
-const logic:Logic = new Logic(20,10);
+const logic: Logic = new Logic(20, 10);
 
-let grid:Graphics = drawGrid(logic.getBoard());
+let grid: Graphics = drawGrid(logic.getBoard());
 
 conty.addChild(drawGrid(logic.getBoard()));
 app.stage.addChild(conty);
 
-document.addEventListener("keydown", keyInput);
+let state: Map<string, boolean> = new Map<string, boolean>();
+document.addEventListener("keydown", keyDown);
+document.addEventListener("keypress", keyPress);
+document.addEventListener("keyup", keyUp);
 
+var myTimer = setInterval(arrowAction, 50);
 
-function keyInput(e: KeyboardEvent): void {
+function arrowAction() {
+	state.forEach((value, key) => {
+		if (value) {
+			switch (key) {
+				case "ArrowRight":
+					logic.movePieceHorizontal(true);
+					break;
+				case "ArrowLeft":
+					logic.movePieceHorizontal(false);
+					break;
+				// case "Space":
+					// logic.movePieceVertical(true);
+					// break;
+				case "ArrowDown":
+					logic.movePieceVertical(false);
+					break;
+				// case "KeyZ":
+					// logic.rotateLeft();
+					// break;
+				// case "KeyX":
+					// logic.rotateRight();
+			}
+		}
+	})
+	conty.removeChild(grid);
+	grid = drawGrid(logic.getBoard());
+	conty.addChild(grid);
+}
+
+function keyDown(e: KeyboardEvent): void {
+	state.set(e.code, true);
+}
+
+function keyPress(e: KeyboardEvent): void {
 	switch (e.code) {
-		case "ArrowRight":
-			logic.movePieceHorizontal(true);
+		case "KeyZ":
+			logic.rotateLeft();
 			break;
-		case "ArrowLeft":
-			logic.movePieceHorizontal(false);
+		case "KeyX":
+			logic.rotateRight();
 			break;
 		case "Space":
 			logic.movePieceVertical(true);
 			break;
-		case "ArrowDown":
-			logic.movePieceVertical(false);
-			break;
-		case "KeyZ":
-			//console.log("rotate left");
-			logic.rotateLeft();
-			break;
-		case "KeyX":
-			//console.log("rotate right");
-			logic.rotateRight();
-			break;
 	}
-	conty.removeChild(grid);
-	grid = drawGrid(logic.getBoard())
-	conty.addChild(grid);
+}
+
+function keyUp(e: KeyboardEvent): void {
+	state.set(e.code, false);
 }
