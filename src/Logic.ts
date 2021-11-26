@@ -1,6 +1,10 @@
 import { BagMaker } from "./BagMaker";
 import * as Pieces from "./pieces";
 
+export function passiveFalling(l: Logic): void {
+    l.movePieceVertical(false);
+}
+
 export class Logic {
     declare board: number[][];
     declare bagMaker: BagMaker;
@@ -24,7 +28,7 @@ export class Logic {
         this.bagMaker = new BagMaker(7);
         this.makeNextPiece();
 
-        var myTimer = setInterval(this.passiveFalling, 1000);
+        var myTimer = setInterval(passiveFalling, 1000, this);
     }
 
     private makeNextPiece(): void {
@@ -125,11 +129,6 @@ export class Logic {
             this.centerBlockCol = c;
             this.drawCurrPiece();
         }
-    }
-
-    public passiveFalling(): void {
-        console.log("fall");
-        // TODO: get this to actually make it fall
     }
 
     public movePieceVertical(hardDrop: boolean): void {
