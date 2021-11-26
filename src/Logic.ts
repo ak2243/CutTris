@@ -11,8 +11,10 @@ export class Logic {
     declare centerBlockRow: number;
     declare centerBlockCol: number;
     declare currPiece: Pieces.Tetromino;
-    declare rows:number;
+    declare holdPiece: number;
+    declare rows: number;
     declare cols: number;
+    declare allowHoldSwap: boolean;
 
     constructor(rows: number, columns: number) {
         this.rows = rows;
@@ -26,13 +28,14 @@ export class Logic {
         }
 
         this.bagMaker = new BagMaker(7);
-        this.makeNextPiece();
+        this.makeNextPiece(this.bagMaker.nextPiece());
+        this.allowHoldSwap = true;
 
         var myTimer = setInterval(passiveFalling, 1000, this);
     }
 
-    private makeNextPiece(): void {
-        switch (this.bagMaker.nextPiece()) {
+    private makeNextPiece(piece: number): void {
+        switch (piece) {
             case 1:
                 this.currPiece = new Pieces.Line();
                 break;
@@ -62,19 +65,19 @@ export class Logic {
 
     private checkPiecePosition(): boolean {//Returns if the block's current position would conflict with any other blocks. 
         //IMPORTANT: This must be run BEFORE drawCurrPiece
-        
-        for(let block of this.currPiece.getLayout()) {
+
+        for (let block of this.currPiece.getLayout()) {
             let blockRow = this.centerBlockRow + block[0];
             let blockCol = this.centerBlockCol + block[1];
-            if(blockRow < 0 || blockRow >= this.board.length) {//Check if the row is out of bounds
+            if (blockRow < 0 || blockRow >= this.board.length) {//Check if the row is out of bounds
                 return false;
             }
 
-            if(blockCol < 0 || blockCol >= this.board[0].length) {//Check if the column is out of bounds
+            if (blockCol < 0 || blockCol >= this.board[0].length) {//Check if the column is out of bounds
                 return false;
             }
 
-            if(this.board[blockRow][blockCol] != 0) {//Check if that square is already occupied
+            if (this.board[blockRow][blockCol] != 0) {//Check if that square is already occupied
                 return false;
             }
         }
@@ -98,7 +101,7 @@ export class Logic {
 
         this.clearCurrPiece();
         this.currPiece.rotate(1);
-        if(!this.checkPiecePosition()) {
+        if (!this.checkPiecePosition()) {
             this.currPiece.rotate(-1);
         }
         this.drawCurrPiece();
@@ -107,7 +110,7 @@ export class Logic {
     public rotateLeft(): void {
         this.clearCurrPiece();
         this.currPiece.rotate(-1);
-        if(!this.checkPiecePosition()) {
+        if (!this.checkPiecePosition()) {
             this.currPiece.rotate(1);
         }
         this.drawCurrPiece();
@@ -135,13 +138,11 @@ export class Logic {
         this.clearCurrPiece();
         let r: number = this.centerBlockRow;
         if (hardDrop) {
-            while(this.checkPiecePosition()) {
+            while (this.checkPiecePosition()) {
                 this.centerBlockRow++;
             }
             this.centerBlockRow--;
-            this.drawCurrPiece();
-            this.checkClear();
-            this.makeNextPiece();
+            this.placePiece();
             return;
 
         } else {
@@ -157,13 +158,30 @@ export class Logic {
         }
     }
 
+    private placePiece(): void {
+        this.drawCurrPiece();
+        this.checkClear();
+        this.makeNextPiece(this.bagMaker.nextPiece());
+        this.allowHoldSwap = true;
+    }
+
+    public swapHold(): void {
+        if (this.allowHoldSwap) {
+            this.clearCurrPiece();
+            let p: number = (this.holdPiece == undefined) ? this.bagMaker.nextPiece() : this.holdPiece;
+            this.holdPiece = this.currPiece.pieceType;
+            this.makeNextPiece(p);
+            this.allowHoldSwap = false;
+        }
+    }
+
     public getBoard(): number[][] {
         return this.board;
     }
 
     public checkClear(): void {
         for (let i = 0; i < this.board.length; i++) {
-            let full:boolean = true;
+            let full: boolean = true;
             this.board[i].forEach(element => {
                 if (element == 0) {
                     full = false;
@@ -172,7 +190,7 @@ export class Logic {
 
             if (full) {
                 this.board.splice(i, 1);
-                let blankLine:number[] = new Array<number>();
+                let blankLine: number[] = new Array<number>();
                 for (let x = 0; x < this.cols; x++) {
                     blankLine[x] = 0;
                 }

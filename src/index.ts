@@ -106,6 +106,9 @@ function keyPress(e: KeyboardEvent): void {
 		case "Space":
 			logic.movePieceVertical(true);
 			break;
+		case "KeyC":
+			logic.swapHold();
+			break;
 	}
 }
 
