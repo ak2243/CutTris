@@ -3,9 +3,9 @@ import { Graphics } from '@pixi/graphics';
 import { Application } from 'pixi.js';
 import { Logic } from './Logic';
 
-function drawGrid(colorGrid: number[][]): Graphics {
+const das:number = 100;
 
-	const pieceColors: number[] =
+const pieceColors: number[] =
 		[0xa1a1a1,//0 = open
 			0x2BD4FF,//1 = I
 			0x001EFF,//2 = J
@@ -15,11 +15,13 @@ function drawGrid(colorGrid: number[][]): Graphics {
 			0x1BC000,//6 = S 
 			0xFF3333];//7 = Z
 
+function drawGrid(colorGrid: number[][], length:number): Graphics {	
+
 	let ret: Graphics = new Graphics();
 
 	let rows = colorGrid.length;
 	let columns = colorGrid[0].length;
-	let length = window.innerHeight / (rows + 2);
+
 
 	for (let c = 0; c < columns; c++) {
 		for (let r = 0; r < rows; r++) {
@@ -50,17 +52,28 @@ conty.y = 30;
 
 const logic: Logic = new Logic(20, 10);
 
-let grid: Graphics = drawGrid(logic.getBoard());
+let board = logic.getBoard();
+let grid: Graphics = drawGrid(board,window.innerHeight / (board.length + 2));
+conty.addChild(grid);
 
-conty.addChild(drawGrid(logic.getBoard()));
-app.stage.addChild(conty);
+const hold: Container = new Container();
+
+let holdDisplay = logic.getHoldPiece();
+let holdGrid: Graphics = drawGrid(holdDisplay,window.innerHeight / (board.length + 4));
+hold.addChild(holdGrid);
+hold.x = conty.x - conty.width/2 - hold.width/2;
+hold.y = 30;
+
+app.stage.addChild(conty,hold);
 
 let state: Map<string, boolean> = new Map<string, boolean>();
 document.addEventListener("keydown", keyDown);
 document.addEventListener("keypress", keyPress);
 document.addEventListener("keyup", keyUp);
 
-var myTimer = setInterval(arrowAction, 50);
+var myTimer = setInterval(arrowAction, 50);//Animation timer
+var date:Date = new Date();
+var pressDownTime:number;
 
 function arrowAction() {
 	state.forEach((value, key) => {
@@ -87,11 +100,13 @@ function arrowAction() {
 		}
 	})
 	conty.removeChild(grid);
-	grid = drawGrid(logic.getBoard());
+	board = logic.getBoard();
+	grid = drawGrid(logic.getBoard(),window.innerHeight / (board.length + 2));
 	conty.addChild(grid);
 }
 
 function keyDown(e: KeyboardEvent): void {
+	pressDownTime = date.getTime();
 	state.set(e.code, true);
 }
 
@@ -103,11 +118,18 @@ function keyPress(e: KeyboardEvent): void {
 		case "KeyX":
 			logic.rotateRight();
 			break;
+		case "KeyA":
+			logic.flip();
+			break;
 		case "Space":
 			logic.movePieceVertical(true);
 			break;
 		case "KeyC":
 			logic.swapHold();
+			hold.removeChild(holdGrid);
+			holdDisplay = logic.getHoldPiece();
+			holdGrid = drawGrid(holdDisplay,window.innerHeight / (board.length + 4));
+			hold.addChild(holdGrid);
 			break;
 	}
 }

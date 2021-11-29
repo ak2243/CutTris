@@ -6,15 +6,15 @@ export function passiveFalling(l: Logic): void {
 }
 
 export class Logic {
-    declare board: number[][];
-    declare bagMaker: BagMaker;
-    declare centerBlockRow: number;
-    declare centerBlockCol: number;
-    declare currPiece: Pieces.Tetromino;
-    declare holdPiece: number;
-    declare rows: number;
-    declare cols: number;
-    declare allowHoldSwap: boolean;
+    declare private board: number[][];
+    declare private bagMaker: BagMaker;
+    declare private centerBlockRow: number;
+    declare private centerBlockCol: number;
+    declare private currPiece: Pieces.Tetromino;
+    declare private holdPiece: number;
+    declare private rows: number;
+    declare private cols: number;
+    declare private allowHoldSwap: boolean;
 
     constructor(rows: number, columns: number) {
         this.rows = rows;
@@ -28,36 +28,42 @@ export class Logic {
         }
 
         this.bagMaker = new BagMaker(7);
-        this.makeNextPiece(this.bagMaker.nextPiece());
+        this.makeNextPiece();
         this.allowHoldSwap = true;
 
         var myTimer = setInterval(passiveFalling, 1000, this);
     }
 
-    private makeNextPiece(piece: number): void {
+    private getPiece(piece: number): Pieces.Tetromino {
         switch (piece) {
             case 1:
-                this.currPiece = new Pieces.Line();
-                break;
+                return new Pieces.Line();
+                
             case 2:
-                this.currPiece = new Pieces.JPiece();
-                break;
+                return new Pieces.JPiece();
+                
             case 3:
-                this.currPiece = new Pieces.LPiece();
-                break;
+                return new Pieces.LPiece();
+                
             case 4:
-                this.currPiece = new Pieces.Square();
-                break;
+                return new Pieces.Square();
+                
             case 5:
-                this.currPiece = new Pieces.TPiece();
-                break;
+                return new Pieces.TPiece();
+               
             case 6:
-                this.currPiece = new Pieces.SPiece();
-                break;
+                return new Pieces.SPiece();
+                
             case 7:
-                this.currPiece = new Pieces.ZPiece();
-                break;
+                return new Pieces.ZPiece();
+            default:
+                return new Pieces.Square();
+
         }
+    }
+
+    private makeNextPiece(): void {
+        this.currPiece = this.getPiece(this.bagMaker.nextPiece());
         this.centerBlockRow = 1;
         this.centerBlockCol = 4;
         this.drawCurrPiece();
@@ -116,6 +122,15 @@ export class Logic {
         this.drawCurrPiece();
     }
 
+    public flip(): void {
+        this.clearCurrPiece();
+        this.currPiece.rotate(2)
+        if (!this.checkPiecePosition()) {
+            this.currPiece.rotate(-2);
+        }
+        this.drawCurrPiece();
+    }
+
     public movePieceHorizontal(moveRight: boolean): void {
         this.clearCurrPiece();
         let c: number = this.centerBlockCol;
@@ -161,18 +176,50 @@ export class Logic {
     private placePiece(): void {
         this.drawCurrPiece();
         this.checkClear();
-        this.makeNextPiece(this.bagMaker.nextPiece());
+        this.makeNextPiece();
         this.allowHoldSwap = true;
     }
 
     public swapHold(): void {
         if (this.allowHoldSwap) {
             this.clearCurrPiece();
-            let p: number = (this.holdPiece == undefined) ? this.bagMaker.nextPiece() : this.holdPiece;
-            this.holdPiece = this.currPiece.pieceType;
-            this.makeNextPiece(p);
+            if(this.holdPiece == undefined) {
+                this.holdPiece = this.currPiece.pieceType;
+                this.makeNextPiece();
+            } else {
+                let swap = this.holdPiece;
+                this.holdPiece = this.currPiece.pieceType;
+                this.currPiece = this.getPiece(swap);
+                this.centerBlockRow = 1;
+                this.centerBlockCol = 4;
+                this.drawCurrPiece();
+            }
+            
             this.allowHoldSwap = false;
         }
+    }
+
+    public getHoldPiece(): number[][] {
+        var ret:number[][] = new Array<Array<number>>();
+        for (let r: number = 0; r < 4; r++) {
+            ret[r] = new Array<number>();
+            for (let c: number = 0; c < 4; c++) {
+                ret[r][c] = 0;
+            }
+        }
+
+        if(this.holdPiece != undefined) {
+            let piece:Pieces.Tetromino = this.getPiece(this.holdPiece);
+
+            let row = 1;
+            let col = 2;
+
+            for(let block of piece.getLayout()) {
+                ret[row + block[0]][col + block[1]] = piece.pieceType;
+            }
+        }
+
+        return ret;
     }
 
     public getBoard(): number[][] {
