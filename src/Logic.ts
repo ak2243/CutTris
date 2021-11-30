@@ -65,7 +65,7 @@ export class Logic {
     private makeNextPiece(): void {
         this.currPiece = this.getPiece(this.bagMaker.nextPiece());
         this.centerBlockRow = 1;
-        this.centerBlockCol = 4;
+        this.centerBlockCol = 5;
         this.drawCurrPiece();
     }
 

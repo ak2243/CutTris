@@ -97,18 +97,7 @@ export class LPiece extends Tetromino {
     override pieceType = 3;
 
     override rotations = [//Square only has one orientation
-        [
-            [0,0],
-            [1,-1],
-            [0,-1],
-            [0,1]
-        ],
-        [
-            [0,0],
-            [-1,-1],
-            [-1,0],
-            [1,0]
-        ],
+        
         [
             [0,0],
             [-1,1],
@@ -120,7 +109,20 @@ export class LPiece extends Tetromino {
             [1,1],
             [1,0],
             [-1,0]
+        ],
+        [
+            [0,0],
+            [1,-1],
+            [0,-1],
+            [0,1]
+        ],
+        [
+            [0,0],
+            [-1,-1],
+            [-1,0],
+            [1,0]
         ]
+        
         
     ]
     constructor() {

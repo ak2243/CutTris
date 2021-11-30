@@ -3,7 +3,7 @@ import { Graphics } from '@pixi/graphics';
 import { Application } from 'pixi.js';
 import { Logic } from './Logic';
 
-const das:number = 100;
+const das:number = 150;
 
 const pieceColors: number[] =
 		[0xa1a1a1,//0 = open
@@ -73,6 +73,7 @@ document.addEventListener("keyup", keyUp);
 
 var myTimer = setInterval(arrowAction, 50);//Animation timer
 var date:Date = new Date();
+
 var pressDownTime:number;
 
 function arrowAction() {
@@ -80,10 +81,14 @@ function arrowAction() {
 		if (value) {
 			switch (key) {
 				case "ArrowRight":
-					logic.movePieceHorizontal(true);
+					if(Date.now() - pressDownTime > das) {
+						logic.movePieceHorizontal(true);
+					}
 					break;
 				case "ArrowLeft":
-					logic.movePieceHorizontal(false);
+					if(Date.now() - pressDownTime > das) {
+						logic.movePieceHorizontal(false);
+					}
 					break;
 				// case "Space":
 					// logic.movePieceVertical(true);
@@ -106,8 +111,19 @@ function arrowAction() {
 }
 
 function keyDown(e: KeyboardEvent): void {
-	pressDownTime = date.getTime();
+	if(e.repeat) { return; }
+	pressDownTime = Date.now();
 	state.set(e.code, true);
+
+	switch (e.code) {
+		case "ArrowRight":
+			logic.movePieceHorizontal(true);
+			break;
+		case "ArrowLeft":
+			logic.movePieceHorizontal(false);
+			break;
+	}
+
 }
 
 function keyPress(e: KeyboardEvent): void {
