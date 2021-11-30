@@ -4,6 +4,7 @@ import { Application } from 'pixi.js';
 import { Logic } from './Logic';
 
 const das:number = 150;
+const arr:number = 50;
 
 const pieceColors: number[] =
 		[0xa1a1a1,//0 = open
@@ -71,8 +72,8 @@ document.addEventListener("keydown", keyDown);
 document.addEventListener("keypress", keyPress);
 document.addEventListener("keyup", keyUp);
 
-var arrowRepeat = setInterval(arrowAction, 50);//Animation timer
-var boardUpdate = setInterval(updateBoard, 50);
+var arrowRepeat = setInterval(arrowAction, arr);
+var boardUpdate = setInterval(updateBoard, 20);//Animation timer
 
 var pressDownTime:number;
 

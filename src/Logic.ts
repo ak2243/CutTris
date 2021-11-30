@@ -15,6 +15,7 @@ export class Logic {
     declare private rows: number;
     declare private cols: number;
     declare private allowHoldSwap: boolean;
+    declare private nextPieces: number[];
 
     constructor(rows: number, columns: number) {
         this.rows = rows;
@@ -28,6 +29,10 @@ export class Logic {
         }
 
         this.bagMaker = new BagMaker(7);
+        this.nextPieces = new Array<number>();
+        for(let i = 0; i < 5; i++) {
+            this.nextPieces.push(this.bagMaker.nextPiece());
+        }
         this.makeNextPiece();
         this.allowHoldSwap = true;
 
@@ -63,7 +68,10 @@ export class Logic {
     }
 
     private makeNextPiece(): void {
-        this.currPiece = this.getPiece(this.bagMaker.nextPiece());
+        let pieceCode:number = this.nextPieces.shift() as number;
+        this.nextPieces.push(this.bagMaker.nextPiece());
+
+        this.currPiece = this.getPiece(pieceCode);
         this.centerBlockRow = 1;
         this.centerBlockCol = 5;
         this.drawCurrPiece();
