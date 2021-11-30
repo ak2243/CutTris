@@ -72,7 +72,6 @@ document.addEventListener("keypress", keyPress);
 document.addEventListener("keyup", keyUp);
 
 var myTimer = setInterval(arrowAction, 50);//Animation timer
-var date:Date = new Date();
 
 var pressDownTime:number;
 
