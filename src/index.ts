@@ -71,9 +71,17 @@ document.addEventListener("keydown", keyDown);
 document.addEventListener("keypress", keyPress);
 document.addEventListener("keyup", keyUp);
 
-var myTimer = setInterval(arrowAction, 50);//Animation timer
+var arrowRepeat = setInterval(arrowAction, 50);//Animation timer
+var boardUpdate = setInterval(updateBoard, 50);
 
 var pressDownTime:number;
+
+function updateBoard() {
+	conty.removeChild(grid);
+	board = logic.getBoard();
+	grid = drawGrid(logic.getBoard(),window.innerHeight / (board.length + 2));
+	conty.addChild(grid);
+}
 
 function arrowAction() {
 	state.forEach((value, key) => {
@@ -103,10 +111,7 @@ function arrowAction() {
 			}
 		}
 	})
-	conty.removeChild(grid);
-	board = logic.getBoard();
-	grid = drawGrid(logic.getBoard(),window.innerHeight / (board.length + 2));
-	conty.addChild(grid);
+
 }
 
 function keyDown(e: KeyboardEvent): void {
