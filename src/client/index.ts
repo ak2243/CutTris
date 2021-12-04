@@ -2,6 +2,9 @@ import { Container } from '@pixi/display';
 import { Graphics } from '@pixi/graphics';
 import { Application } from 'pixi.js';
 import { Logic } from './Logic';
+import { io } from "socket.io-client";
+
+const socket = io("http://localhost:3000/");
 
 const das:number = 150;
 const arr:number = 50;

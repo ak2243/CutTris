@@ -1,13 +1,20 @@
 {
   "license": "",
   "scripts": {
-    "start": "webpack serve --mode=development",
-    "build": "run-s clean build-only",
-    "build-only": "webpack --mode=production",
+    "start": "run-s build serve",
+    "serve": "node dist/server.js",
+    "build": "run-s clean webpackbuild serverbuild",
+    "webpackbuild": "webpack --mode=production",
+    "serverbuild": "tsc --outDir dist/ src/server/server.ts",
     "clean": "rimraf dist"
   },
   "dependencies": {
-    "pixi.js": "^6.2.0"
+    "@types/express": "^4.17.13",
+    "@types/socket.io": "^3.0.2",
+    "express": "^4.17.1",
+    "pixi.js": "^6.2.0",
+    "socket.io": "^4.4.0",
+    "socket.io-client": "^4.4.0"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^9.1.0",
