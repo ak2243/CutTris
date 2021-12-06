@@ -3,25 +3,21 @@ import * as socketio from "socket.io";
 import * as path from "path";
 
 const app = express();
-const port = process.env.PORT || 3000;
-app.set("port", port);
 app.use(express.static('static'));
 
-let http = require("http").Server(app);
-// set up socket.io and bind it to our
-// http server.
-let io = require("socket.io")(http);
+import {createServer} from "http";
+const httpServer = createServer(app);
+const io = new socketio.Server(httpServer);
+const port = process.env.PORT || 3000;
 
 app.get("/", (req: any, res: any) => {
   res.sendFile(path.resolve("./static/index.html"));
 });
 
-// whenever a user connects on port 3000 via
-// a websocket, log that a user has connected
 io.on("connection", function(socket: any) {
   console.log("a user connected");
 });
 
-app.listen(3000, function() {
-	console.log(`Server on port ${port}.`)
-})
+httpServer.listen(port, () => {
+  console.log(`Listening on http://localhost:${port}`);
+});
