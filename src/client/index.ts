@@ -4,11 +4,8 @@ import { Application } from 'pixi.js';
 import { Logic } from './Logic';
 import { io } from "socket.io-client";
 
-// const socket = io("http://localhost:3000/");
+const socket = io("http://localhost:3000/");
 
-// socket.on("hello", function() {
-	// console.log("hello");
-// });
 
 const das:number = 150;
 const arr:number = 50;
@@ -165,3 +162,7 @@ function keyPress(e: KeyboardEvent): void {
 function keyUp(e: KeyboardEvent): void {
 	state.set(e.code, false);
 }
+
+socket.on("hello", (data) => {
+	logic.movePieceVertical(true);
+})
