@@ -3,7 +3,8 @@ import * as socketio from "socket.io";
 import * as path from "path";
 
 const app = express();
-app.set("port", process.env.PORT || 3000);
+const port = process.env.PORT || 3000;
+app.set("port", port);
 app.use(express.static('static'));
 
 let http = require("http").Server(app);
@@ -22,5 +23,5 @@ io.on("connection", function(socket: any) {
 });
 
 app.listen(3000, function() {
-	console.log( 'Server on port 3000.')
+	console.log(`Server on port ${port}.`)
 })
