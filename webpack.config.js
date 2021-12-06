@@ -1,6 +1,5 @@
 const webpack = require('webpack');
 const path = require('path');
-const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
@@ -11,7 +10,7 @@ module.exports = (env, argv) => {
 
         // Your build destination
         output: {
-            path: path.resolve(__dirname, 'dist'),
+            path: path.resolve(__dirname, 'static'),
             filename: 'bundle.js'
         },
 
@@ -69,10 +68,6 @@ module.exports = (env, argv) => {
 
         plugins: [
             // Copy our static assets to the final build
-            new CopyPlugin({
-                patterns: [{ from: 'static/' }],
-            }),
-
             // Make an index.html from the template
             new HtmlWebpackPlugin({
                 template: 'src/client/index.ejs',

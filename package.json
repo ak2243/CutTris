@@ -6,7 +6,7 @@
     "build": "run-s clean webpackbuild serverbuild",
     "webpackbuild": "webpack --mode=production",
     "serverbuild": "tsc --outDir dist/ src/server/server.ts",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist static"
   },
   "dependencies": {
     "@types/express": "^4.17.13",
