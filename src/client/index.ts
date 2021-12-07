@@ -1,14 +1,12 @@
 import { Container } from '@pixi/display';
 import { Graphics } from '@pixi/graphics';
 import { Application } from 'pixi.js';
-import { Logic } from './Logic';
 import { io } from "socket.io-client";
 
 const socket = io("http://localhost:3000/");
 
-
-const das:number = 150;
-const arr:number = 50;
+let das:number = 150;
+let arr:number = 50;
 
 const pieceColors: number[] =
 		[0xa1a1a1,//0 = open
@@ -49,27 +47,26 @@ const app = new Application({
 	height: window.innerHeight
 });
 
-
-
+const holdC: Container = new Container();
 const conty: Container = new Container();
 conty.x = window.innerWidth / 2 - (10 * window.innerHeight) / 44;
 conty.y = 30;
+app.stage.addChild(conty, holdC);
+var grid:Graphics;
+var holdGrid:Graphics;
+var holdBoxMultiplier:number;
 
-const logic: Logic = new Logic(20, 10);
+socket.on("start", (board: number[][], holdDisplay: number[][]) => {
+	grid = drawGrid(board,window.innerHeight / (board.length + 2));
+	conty.addChild(grid);
 
-let board = logic.getBoard();
-let grid: Graphics = drawGrid(board,window.innerHeight / (board.length + 2));
-conty.addChild(grid);
+	let holdGrid = drawGrid(holdDisplay,window.innerHeight / (board.length + 4));
+	holdC.addChild(holdGrid);
+	holdC.x = conty.x - conty.width/2 - holdC.width/2;
+	holdC.y = 30;
 
-const hold: Container = new Container();
-
-let holdDisplay = logic.getHoldPiece();
-let holdGrid: Graphics = drawGrid(holdDisplay,window.innerHeight / (board.length + 4));
-hold.addChild(holdGrid);
-hold.x = conty.x - conty.width/2 - hold.width/2;
-hold.y = 30;
-
-app.stage.addChild(conty,hold);
+	holdBoxMultiplier = 1 / (board.length + 4);
+});
 
 let state: Map<string, boolean> = new Map<string, boolean>();
 document.addEventListener("keydown", keyDown);
@@ -77,42 +74,34 @@ document.addEventListener("keypress", keyPress);
 document.addEventListener("keyup", keyUp);
 
 var arrowRepeat = setInterval(arrowAction, arr);
-var boardUpdate = setInterval(updateBoard, 20);//Animation timer
-
 var pressDownTime:number;
 
-function updateBoard() {
+socket.on("updateBoard", (board:number[][]) => {
 	conty.removeChild(grid);
-	board = logic.getBoard();
-	grid = drawGrid(logic.getBoard(),window.innerHeight / (board.length + 2));
+	grid = drawGrid(board, window.innerHeight / (board.length + 2));
 	conty.addChild(grid);
-}
+});
+
+socket.on("updateHold", (hold:number[][]) => {
+	// TODO: help
+	holdC.removeChild(holdGrid);
+	holdGrid = drawGrid(hold, window.innerHeight * holdBoxMultiplier);
+	holdC.addChild(holdGrid);
+});
 
 function arrowAction() {
 	state.forEach((value, key) => {
-		if (value) {
+		if (value && (Date.now() - pressDownTime > das)) {
 			switch (key) {
 				case "ArrowRight":
-					if(Date.now() - pressDownTime > das) {
-						logic.movePieceHorizontal(true);
-					}
+					console.log("moveR");
 					break;
 				case "ArrowLeft":
-					if(Date.now() - pressDownTime > das) {
-						logic.movePieceHorizontal(false);
-					}
+					console.log("moveL");
 					break;
-				// case "Space":
-					// logic.movePieceVertical(true);
-					// break;
 				case "ArrowDown":
-					logic.movePieceVertical(false);
+					console.log("softDrop");
 					break;
-				// case "KeyZ":
-					// logic.rotateLeft();
-					// break;
-				// case "KeyX":
-					// logic.rotateRight();
 			}
 		}
 	})
@@ -126,10 +115,13 @@ function keyDown(e: KeyboardEvent): void {
 
 	switch (e.code) {
 		case "ArrowRight":
-			logic.movePieceHorizontal(true);
+			console.log("mr");
 			break;
 		case "ArrowLeft":
-			logic.movePieceHorizontal(false);
+			console.log("ml");
+			break;
+		case "ArrowDown":
+			console.log("sd"); // soft drop
 			break;
 	}
 
@@ -138,23 +130,19 @@ function keyDown(e: KeyboardEvent): void {
 function keyPress(e: KeyboardEvent): void {
 	switch (e.code) {
 		case "KeyZ":
-			logic.rotateLeft();
+			console.log("rl");
 			break;
 		case "KeyX":
-			logic.rotateRight();
+			console.log("rr");
 			break;
 		case "KeyA":
-			logic.flip();
+			console.log("rf");
 			break;
 		case "Space":
-			logic.movePieceVertical(true);
+			socket.emit("hd") // hard drop
 			break;
 		case "KeyC":
-			logic.swapHold();
-			hold.removeChild(holdGrid);
-			holdDisplay = logic.getHoldPiece();
-			holdGrid = drawGrid(holdDisplay,window.innerHeight / (board.length + 4));
-			hold.addChild(holdGrid);
+			socket.emit("sh"); // swap hold
 			break;
 	}
 }
@@ -162,7 +150,3 @@ function keyPress(e: KeyboardEvent): void {
 function keyUp(e: KeyboardEvent): void {
 	state.set(e.code, false);
 }
-
-socket.on("hello", (data) => {
-	logic.movePieceVertical(true);
-})

@@ -16,9 +16,14 @@ app.get("/", (req: any, res: any) => {
 
 io.on("connection", function(socket: any) {
   console.log("a user connected");
-  let data = 4;
-  io.emit("hello", data);
 });
+
+function fall(): void {
+  io.emit("fall");
+}
+
+var boardUpdate = setInterval(fall, 1000);//Animation timer
+
 
 httpServer.listen(port, () => {
   console.log(`Listening on http://localhost:${port}`);

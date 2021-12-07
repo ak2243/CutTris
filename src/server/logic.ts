@@ -1,9 +1,9 @@
 import { BagMaker } from "./BagMaker";
 import * as Pieces from "./pieces";
 
-export function passiveFalling(l: Logic): void {
-    l.movePieceVertical(false);
-}
+// export function passiveFalling(l: Logic): void {
+//     l.movePieceVertical(false);
+// }
 
 export class Logic {
     declare private board: number[][];
@@ -36,7 +36,7 @@ export class Logic {
         this.makeNextPiece();
         this.allowHoldSwap = true;
 
-        var myTimer = setInterval(passiveFalling, 1000, this);
+        // var myTimer = setInterval(passiveFalling, 1000, this);
     }
 
     private getPiece(piece: number): Pieces.Tetromino {
