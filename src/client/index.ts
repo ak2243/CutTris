@@ -39,6 +39,7 @@ function drawGrid(colorGrid: number[][], length:number): Graphics {
 }
 
 const app = new Application({
+	//@ts-ignore
 	view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
 	resolution: window.devicePixelRatio || 1,
 	autoDensity: true,
@@ -51,21 +52,27 @@ const holdC: Container = new Container();
 const conty: Container = new Container();
 conty.x = window.innerWidth / 2 - (10 * window.innerHeight) / 44;
 conty.y = 30;
-app.stage.addChild(conty, holdC);
+app.stage.addChild(conty);
+
 var grid:Graphics;
 var holdGrid:Graphics;
 var holdBoxMultiplier:number;
 
-socket.on("start", (board: number[][], holdDisplay: number[][]) => {
+var mySocket:number;
+
+socket.on("start", (boards: Array<number[][]>, holdDisplay: number[][], numSocket: number) => {
+	mySocket = numSocket;
+	let board:number[][] = boards[mySocket];
 	grid = drawGrid(board,window.innerHeight / (board.length + 2));
 	conty.addChild(grid);
 
-	let holdGrid = drawGrid(holdDisplay,window.innerHeight / (board.length + 4));
+	holdBoxMultiplier = 1 / (board.length + 4);
+	let holdGrid = drawGrid(holdDisplay, window.innerHeight * holdBoxMultiplier);
 	holdC.addChild(holdGrid);
-	holdC.x = conty.x - conty.width/2 - holdC.width/2;
+	holdC.x = conty.x - conty.width - holdC.width;
 	holdC.y = 30;
 
-	holdBoxMultiplier = 1 / (board.length + 4);
+	console.log(holdBoxMultiplier);
 });
 
 let state: Map<string, boolean> = new Map<string, boolean>();
@@ -76,7 +83,8 @@ document.addEventListener("keyup", keyUp);
 var arrowRepeat = setInterval(arrowAction, arr);
 var pressDownTime:number;
 
-socket.on("updateBoard", (board:number[][]) => {
+socket.on("updateBoard", (boards:Array<number[][]>) => {
+	let board:number[][] = boards[mySocket];
 	conty.removeChild(grid);
 	grid = drawGrid(board, window.innerHeight / (board.length + 2));
 	conty.addChild(grid);
