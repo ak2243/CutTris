@@ -1,4 +1,4 @@
-import { BagMaker } from "./BagMaker";
+import { BagMaker } from "./bagMaker";
 import * as Pieces from "./pieces";
 
 // export function passiveFalling(l: Logic): void {
