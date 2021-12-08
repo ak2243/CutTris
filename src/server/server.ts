@@ -15,9 +15,13 @@ app.get("/", (req: any, res: any) => {
   res.sendFile(path.resolve("./static/index.html"));
 });
 
+
+httpServer.listen(port, () => {
+  console.log(`Listening on http://localhost:${port}`);
+});
+
 const rows:number = 20;
 const columns:number = 10;
-let sockets:Array<any> = new Array<any>();
 let logicMap:Map<any, Logic> = new Map<any, Logic>();
 let fallTimers:Map<any, any> = new Map<any, any>();
 
@@ -32,7 +36,41 @@ io.on("connection", function(socket: any) {
   let fallTimer = setInterval(fall, 1000, l);
   fallTimers.set(socket, fallTimer);
 
-  sockets.push(socket);
+  // Detect controls:
+  socket.on("hd", () => {
+    l.movePieceVertical(true);
+  });
+
+  socket.on("sd", () => {
+    l.movePieceVertical(false);
+  });
+
+  socket.on("rl", () => {
+    l.rotateLeft();
+  });
+
+  socket.on("rr", () => {
+    l.rotateRight();
+  });
+
+  socket.on("rf", () => {
+    l.flip();
+  });
+
+  socket.on("mr", () => {
+    l.movePieceHorizontal(true);
+  });
+
+  socket.on("ml", () => {
+    l.movePieceHorizontal(false);
+  });
+
+  socket.on("sh", () => {
+    if(l.swapHold()) {
+      socket.emit("updateHold", l.getHoldPiece());
+    }
+  })
+
 });
 
 
@@ -50,7 +88,10 @@ function fall(l: Logic): void {
 
 var boardsUpdateTimer = setInterval(updateBoards, 20);//Animation timer
 
+// Now, detect controls
 
-httpServer.listen(port, () => {
-  console.log(`Listening on http://localhost:${port}`);
+logicMap.forEach((value: Logic, key: any) => {
+  key.on("hd", () => {
+    value.movePieceVertical(true);
+  })
 });

@@ -188,7 +188,7 @@ export class Logic {
         this.allowHoldSwap = true;
     }
 
-    public swapHold(): void {
+    public swapHold(): boolean {
         if (this.allowHoldSwap) {
             this.clearCurrPiece();
             if(this.holdPiece == undefined) {
@@ -204,7 +204,9 @@ export class Logic {
             }
             
             this.allowHoldSwap = false;
+            return true;
         }
+        return false;
     }
 
     public getHoldPiece(): number[][] {

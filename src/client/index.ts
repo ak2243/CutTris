@@ -102,13 +102,13 @@ function arrowAction() {
 		if (value && (Date.now() - pressDownTime > das)) {
 			switch (key) {
 				case "ArrowRight":
-					console.log("moveR");
+					socket.emit("mr");
 					break;
 				case "ArrowLeft":
-					console.log("moveL");
+					socket.emit("ml");
 					break;
 				case "ArrowDown":
-					console.log("softDrop");
+					socket.emit("sd");
 					break;
 			}
 		}
@@ -123,13 +123,13 @@ function keyDown(e: KeyboardEvent): void {
 
 	switch (e.code) {
 		case "ArrowRight":
-			console.log("mr");
+			socket.emit("mr");
 			break;
 		case "ArrowLeft":
-			console.log("ml");
+			socket.emit("ml");
 			break;
 		case "ArrowDown":
-			console.log("sd"); // soft drop
+			socket.emit("sd"); // soft drop
 			break;
 	}
 
@@ -138,13 +138,13 @@ function keyDown(e: KeyboardEvent): void {
 function keyPress(e: KeyboardEvent): void {
 	switch (e.code) {
 		case "KeyZ":
-			console.log("rl");
+			socket.emit("rl");
 			break;
 		case "KeyX":
-			console.log("rr");
+			socket.emit("rr");
 			break;
 		case "KeyA":
-			console.log("rf");
+			socket.emit("rf");
 			break;
 		case "Space":
 			socket.emit("hd") // hard drop
