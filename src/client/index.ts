@@ -5,6 +5,7 @@ import { io } from "socket.io-client";
 
 const socket = io("http://localhost:3000/");
 
+let margin:number = 30;
 let das:number = 150;
 let arr:number = 50;
 
@@ -51,28 +52,27 @@ const app = new Application({
 const holdC: Container = new Container();
 const conty: Container = new Container();
 conty.x = window.innerWidth / 2 - (10 * window.innerHeight) / 44;
-conty.y = 30;
-app.stage.addChild(conty);
+conty.y = margin;
+app.stage.addChild(conty, holdC);
 
 var grid:Graphics;
 var holdGrid:Graphics;
-var holdBoxMultiplier:number;
-
 var mySocket:number;
+var gridLength:number;
+var holdLength:number;
 
 socket.on("start", (boards: Array<number[][]>, holdDisplay: number[][], numSocket: number) => {
 	mySocket = numSocket;
 	let board:number[][] = boards[mySocket];
-	grid = drawGrid(board,window.innerHeight / (board.length + 2));
+	gridLength = window.innerHeight / (board.length + 2);
+	grid = drawGrid(board, gridLength);
 	conty.addChild(grid);
 
-	holdBoxMultiplier = 1 / (board.length + 4);
-	let holdGrid = drawGrid(holdDisplay, window.innerHeight * holdBoxMultiplier);
+	holdLength = gridLength / 2;
+	holdGrid = drawGrid(holdDisplay, holdLength);
 	holdC.addChild(holdGrid);
-	holdC.x = conty.x - conty.width - holdC.width;
-	holdC.y = 30;
-
-	console.log(holdBoxMultiplier);
+	holdC.x = conty.x - holdC.width - margin;
+	holdC.y = conty.y;
 });
 
 let state: Map<string, boolean> = new Map<string, boolean>();
@@ -90,10 +90,10 @@ socket.on("updateBoard", (boards:Array<number[][]>) => {
 	conty.addChild(grid);
 });
 
-socket.on("updateHold", (hold:number[][]) => {
+socket.on("updateHold", (holdDisplay:number[][]) => {
 	// TODO: help
 	holdC.removeChild(holdGrid);
-	holdGrid = drawGrid(hold, window.innerHeight * holdBoxMultiplier);
+	holdGrid = drawGrid(holdDisplay, holdLength);
 	holdC.addChild(holdGrid);
 });
 
