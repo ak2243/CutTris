@@ -5,7 +5,7 @@ import * as path from "path";
 const app = express();
 app.use(express.static('static'));
 
-import {createServer} from "http";
+import { createServer } from "http";
 import { Logic } from "./logic";
 const httpServer = createServer(app);
 const io = new socketio.Server(httpServer);
@@ -20,17 +20,20 @@ httpServer.listen(port, () => {
   console.log(`Listening on http://localhost:${port}`);
 });
 
-const rows:number = 20;
-const columns:number = 10;
-let logicMap:Map<any, Logic> = new Map<any, Logic>();
-let fallTimers:Map<any, any> = new Map<any, any>();
+const rows: number = 20;
+const columns: number = 10;
+let logicMap: Map<any, Logic> = new Map<any, Logic>();
+let fallTimers: Map<any, any> = new Map<any, any>();
 
-let numSockets:number = 0;
+let numSockets: number = 0;
 
-io.on("connection", function(socket: any) {
+io.on("connection", function (socket: any) {
   console.log("a user connected");
   numSockets++;
-  let l:Logic = new Logic(rows, columns);
+  let l: Logic = new Logic(rows, columns, (victory: boolean) => {
+    io.emit(victory ? "win" : "loss", numSockets - 1);
+    // TODO: is the ternary operator ok?
+  });
   logicMap.set(socket, l);
   socket.emit("start", l.getBoard(), l.getHoldPiece(), numSockets - 1);
   let fallTimer = setInterval(fall, 1000, l);
@@ -66,7 +69,7 @@ io.on("connection", function(socket: any) {
   });
 
   socket.on("sh", () => {
-    if(l.swapHold()) {
+    if (l.swapHold()) {
       socket.emit("updateHold", l.getHoldPiece());
     }
   })
@@ -75,7 +78,7 @@ io.on("connection", function(socket: any) {
 
 
 function updateBoards(): void {
-  let boards:Array<number[][]> = new Array<number[][]>();
+  let boards: Array<number[][]> = new Array<number[][]>();
   logicMap.forEach((value: Logic, key: any) => {
     boards.push(value.getBoard());
   });

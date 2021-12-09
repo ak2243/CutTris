@@ -1,6 +1,6 @@
 import { Container } from '@pixi/display';
 import { Graphics } from '@pixi/graphics';
-import { Application } from 'pixi.js';
+import { Application, defaultVertex } from 'pixi.js';
 import { io } from "socket.io-client";
 
 const socket = io("http://localhost:3000/");
@@ -157,4 +157,21 @@ function keyPress(e: KeyboardEvent): void {
 
 function keyUp(e: KeyboardEvent): void {
 	state.set(e.code, false);
+}
+
+// check for game over
+socket.on("loss", (socketNum) => {
+	gameEndMessage(socketNum != mySocket);
+});
+
+socket.on("win", (socketNum) => {
+	gameEndMessage(socketNum == mySocket);
+});
+
+function gameEndMessage(victory: boolean): void {
+	let alertMsg:string = "defeat :("
+	if (victory) {
+		alertMsg = "victory :)"
+	}
+	alert(alertMsg);
 }
