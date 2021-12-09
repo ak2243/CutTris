@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = (env, argv) => {
     return ({
@@ -69,6 +70,7 @@ module.exports = (env, argv) => {
         plugins: [
             // Copy our static assets to the final build
             // Make an index.html from the template
+			new Dotenv(),
             new HtmlWebpackPlugin({
                 template: 'src/client/index.ejs',
                 hash: true,

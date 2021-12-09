@@ -2,6 +2,9 @@ import * as express from "express";
 import * as socketio from "socket.io";
 import * as path from "path";
 
+const port = +process.env.PORT;
+const ip = process.env.IP;
+
 const app = express();
 app.use(express.static('static'));
 
@@ -9,15 +12,9 @@ import { createServer } from "http";
 import { Logic } from "./logic";
 const httpServer = createServer(app);
 const io = new socketio.Server(httpServer);
-const port = process.env.PORT || 3000;
 
-app.get("/", (req: any, res: any) => {
-  res.sendFile(path.resolve("./static/index.html"));
-});
-
-
-httpServer.listen(port, () => {
-  console.log(`Listening on http://localhost:${port}`);
+httpServer.listen(port, "0.0.0.0", () => {
+  console.log(`Listening on http://${ip}:${port}`);
 });
 
 const rows: number = 20;
