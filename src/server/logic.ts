@@ -17,8 +17,10 @@ export class Logic {
     declare private allowHoldSwap: boolean;
     declare private nextPieces: number[];
     declare private gameOver: Function;
+    declare private linesToWin: number;
 
-    constructor(rows: number, columns: number, gameOver: Function) {
+    constructor(rows: number, columns: number, linesToWin:number, gameOver: Function) {
+        this.linesToWin = linesToWin;
         this.rows = rows;
         this.cols = columns;
         this.gameOver = gameOver;
@@ -39,6 +41,10 @@ export class Logic {
         this.allowHoldSwap = true;
 
         // var myTimer = setInterval(passiveFalling, 1000, this);
+    }
+
+    public getLinesLeftToClear(): number {
+        return this.linesToWin;
     }
 
     private getPiece(piece: number): Pieces.Tetromino {
@@ -193,6 +199,10 @@ export class Logic {
         this.checkClear();
         this.makeNextPiece();
         this.allowHoldSwap = true;
+
+        if (this.linesToWin <= 0) {
+            this.gameOver(true);
+        }
     }
 
     public swapHold(): boolean {
@@ -260,6 +270,7 @@ export class Logic {
                 }
                 console.log(blankLine);
                 this.board.unshift(blankLine);
+                this.linesToWin--;
             }
         }
     }

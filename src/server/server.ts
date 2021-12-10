@@ -17,22 +17,24 @@ httpServer.listen(port, "0.0.0.0", () => {
   console.log(`Listening on http://${ip}:${port}`);
 });
 
+const linesToWin:number = 4;
 const rows: number = 20;
 const columns: number = 10;
 let logicMap: Map<any, Logic> = new Map<any, Logic>();
 let fallTimers: Map<any, any> = new Map<any, any>();
+
 
 let numSockets: number = 0;
 
 io.on("connection", function (socket: any) {
   console.log("a user connected");
   numSockets++;
-  let l: Logic = new Logic(rows, columns, (victory: boolean) => {
+  let l: Logic = new Logic(rows, columns, linesToWin, (victory: boolean) => {
     io.emit(victory ? "win" : "loss", numSockets - 1);
     // TODO: is the ternary operator ok?
   });
   logicMap.set(socket, l);
-  socket.emit("start", l.getBoard(), l.getHoldPiece(), numSockets - 1);
+  socket.emit("start", l.getBoard(), l.getHoldPiece(), numSockets - 1, linesToWin);
   let fallTimer = setInterval(fall, 1000, l);
   fallTimers.set(socket, fallTimer);
 
@@ -76,10 +78,12 @@ io.on("connection", function (socket: any) {
 
 function updateBoards(): void {
   let boards: Array<number[][]> = new Array<number[][]>();
+  let linesToClear: Array<number> = new Array<number>();
   logicMap.forEach((value: Logic, key: any) => {
     boards.push(value.getBoard());
+    linesToClear.push(value.getLinesLeftToClear());
   });
-  io.emit("updateBoard", boards);
+  io.emit("updateBoard", boards, linesToClear);
 }
 
 function fall(l: Logic): void {

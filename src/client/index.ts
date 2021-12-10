@@ -6,8 +6,8 @@ import { io } from "socket.io-client";
 const socket = io(`http://${process.env.IP}:${process.env.PORT}/`);
 
 let margin:number = 30;
-let das:number = 150;
-let arr:number = 50;
+let das:number = +process.env.DAS;
+let arr:number = +process.env.ARR;
 
 const pieceColors: number[] =
 		[0xa1a1a1,//0 = open
@@ -50,29 +50,32 @@ const app = new Application({
 });
 
 const holdC: Container = new Container();
-const conty: Container = new Container();
-conty.x = window.innerWidth / 2 - (10 * window.innerHeight) / 44;
-conty.y = margin;
-app.stage.addChild(conty, holdC);
+const myBoardC: Container = new Container();
+myBoardC.x = window.innerWidth / 2 - (10 * window.innerHeight) / 44;
+myBoardC.y = margin;
+app.stage.addChild(myBoardC, holdC);
 
 var grid:Graphics;
 var holdGrid:Graphics;
 var mySocket:number;
 var gridLength:number;
 var holdLength:number;
+var lineClearGoal:number;
+var linesLeftToClear:number;
 
-socket.on("start", (boards: Array<number[][]>, holdDisplay: number[][], numSocket: number) => {
+socket.on("start", (boards: Array<number[][]>, holdDisplay: number[][], numSocket: number, lineGoal: number) => {
+	lineClearGoal = lineGoal;
 	mySocket = numSocket;
 	let board:number[][] = boards[mySocket];
 	gridLength = window.innerHeight / (board.length + 2);
 	grid = drawGrid(board, gridLength);
-	conty.addChild(grid);
+	myBoardC.addChild(grid);
 
 	holdLength = gridLength / 2;
 	holdGrid = drawGrid(holdDisplay, holdLength);
 	holdC.addChild(holdGrid);
-	holdC.x = conty.x - holdC.width - margin;
-	holdC.y = conty.y;
+	holdC.x = myBoardC.x - holdC.width - margin;
+	holdC.y = myBoardC.y;
 });
 
 let state: Map<string, boolean> = new Map<string, boolean>();
@@ -83,11 +86,12 @@ document.addEventListener("keyup", keyUp);
 var arrowRepeat = setInterval(arrowAction, arr);
 var pressDownTime:number;
 
-socket.on("updateBoard", (boards:Array<number[][]>) => {
+socket.on("updateBoard", (boards:Array<number[][]>, linesLeft:Array<number>) => {
+	linesLeftToClear = linesLeft[mySocket];
 	let board:number[][] = boards[mySocket];
-	conty.removeChild(grid);
+	myBoardC.removeChild(grid);
 	grid = drawGrid(board, window.innerHeight / (board.length + 2));
-	conty.addChild(grid);
+	myBoardC.addChild(grid);
 });
 
 socket.on("updateHold", (holdDisplay:number[][]) => {
