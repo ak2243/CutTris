@@ -1,5 +1,6 @@
 import { BagMaker } from "./bagMaker";
 import * as Pieces from "./pieces";
+import {getWallkickNormal} from "./wallkicks";
 
 // export function passiveFalling(l: Logic): void {
 //     l.movePieceVertical(false);
@@ -125,9 +126,26 @@ export class Logic {
     }
 
     public rotateRight(): void {
-
         this.clearCurrPiece();
+        let rotation = this.currPiece.getRotation();
         this.currPiece.rotate(1);
+        let desiredRotation = this.currPiece.getRotation();
+        
+        //Squares and Lines can't wallkick, only do wallkicks if necessary
+        if(this.currPiece.pieceType != 1 && this.currPiece.pieceType != 4 && !this.checkPiecePosition()) {
+            let wKicks = getWallkickNormal(rotation, desiredRotation);
+            for(let position of wKicks) {
+                //Check the potential position for collisions
+                this.centerBlockRow += position[0];
+                this.centerBlockCol += position[1];
+                if(this.checkPiecePosition()) {
+                    break;
+                }
+                this.centerBlockRow -= position[0];
+                this.centerBlockCol -= position[1];
+            }
+        }
+
         if (!this.checkPiecePosition()) {
             this.currPiece.rotate(-1);
         }
@@ -136,7 +154,25 @@ export class Logic {
 
     public rotateLeft(): void {
         this.clearCurrPiece();
+        let rotation = this.currPiece.getRotation();
         this.currPiece.rotate(-1);
+        let desiredRotation = this.currPiece.getRotation();
+        
+        
+        
+        if(this.currPiece.pieceType != 1 && this.currPiece.pieceType != 4 && !this.checkPiecePosition()) {
+            let wKicks:number[][] = getWallkickNormal(rotation, desiredRotation);
+            for(let position of wKicks) {
+                this.centerBlockRow += position[0];
+                this.centerBlockCol += position[1];
+                if(this.checkPiecePosition()) {
+                    break;
+                }
+                this.centerBlockRow -= position[0];
+                this.centerBlockCol -= position[1];
+            }
+        }
+
         if (!this.checkPiecePosition()) {
             this.currPiece.rotate(1);
         }

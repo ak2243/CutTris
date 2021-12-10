@@ -7,6 +7,10 @@ export abstract class Tetromino {
         this.orientation = 0;
     }
 
+    getRotation(): number {
+        return this.orientation;
+    }
+
     getLayout(): number[][] {
         return this.rotations[this.orientation];
     }
