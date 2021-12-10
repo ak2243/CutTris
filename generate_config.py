@@ -8,8 +8,9 @@ else:
     port = 3000 # default value
 
 try:
-    host_name = socket.gethostname()
-    ip = socket.gethostbyname(host_name)
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    ip = s.getsockname()[0]
 except:
     print("Unable to get Hostname and IP")
     exit()
