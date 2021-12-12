@@ -55,6 +55,9 @@ function startGame(): void {
             for (let l of allLogics) {
                 l.reset()
                 // reset game on win/loss
+                // tell all clients to reset hold
+                // also give a blank array so they can replace the piece with a blank grid of the same size
+                io.emit("eraseHold", l.getHoldPiece());
             }
         });
         allLogics.push(logic); // add logic instance to array

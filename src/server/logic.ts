@@ -57,6 +57,9 @@ export class Logic {
             this.nextPieces.push(this.bagMaker.nextPiece());
         }
         this.makeNextPiece();
+
+        // reset hold piece and allow swap
+        this.holdPiece = undefined;
         this.allowHoldSwap = true;
     }
 

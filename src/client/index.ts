@@ -111,7 +111,6 @@ socket.on("updateBoard", (boards:Array<number[][]>, linesLeft:Array<number>) => 
 	myBoardC.addChild(grid);
 
 	let nextBoard:number[][] = boards[(mySocket + 1) % boards.length];
-	// let nextBoard:number[][] = board;
 	nextBoardC.removeChild(nextGrid);
 	nextGrid = drawGrid(nextBoard, gridLength);
 	nextBoardC.addChild(nextGrid);
@@ -203,3 +202,12 @@ function gameEndMessage(victory: boolean): void {
 	}
 	alert(alertMsg);
 }
+
+// After the game ends, the server may reset the game and thus erase the hold piece
+socket.on("eraseHold", (blankHold: number[][]) => {
+	holdLength = gridLength / 2;
+	holdGrid = drawGrid(blankHold, holdLength);
+	holdC.addChild(holdGrid);
+	holdC.x = myBoardC.x - holdC.width - margin;
+	holdC.y = myBoardC.y;
+});
