@@ -63,6 +63,10 @@ var holdLength:number;
 var lineClearGoal:number;
 var linesLeftToClear:number;
 
+socket.on("deny", () => {
+	alert("A game is in progress, please try again later");
+});
+
 socket.on("start", (boards: Array<number[][]>, holdDisplay: number[][], numSocket: number, lineGoal: number) => {
 	lineClearGoal = lineGoal;
 	mySocket = numSocket;
