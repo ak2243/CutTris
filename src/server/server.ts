@@ -17,7 +17,7 @@ httpServer.listen(port, "0.0.0.0", () => {
     console.log(`Listening on http://${ip}:${port}`);
 });
 
-const linesToWin: number = 4;
+const linesToWin: number = 40;
 const rows: number = 20;
 const columns: number = 10;
 
@@ -38,6 +38,9 @@ function startGame(): void {
                 result = "win";
             }
             io.emit(result, i);
+            for (let l of allLogics) {
+                l.reset()
+            }
         });
         allLogics.push(logic);
     }
