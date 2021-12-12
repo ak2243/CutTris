@@ -51,11 +51,15 @@ const app = new Application({
 
 const holdC: Container = new Container();
 const myBoardC: Container = new Container();
-myBoardC.x = window.innerWidth / 2 - (10 * window.innerHeight) / 44;
+myBoardC.x = (window.innerWidth / 3) - ((10 * window.innerHeight) / 44);
 myBoardC.y = margin;
-app.stage.addChild(myBoardC, holdC);
+const nextBoardC: Container = new Container();
+nextBoardC.x =  (2 * (window.innerWidth / 3)) - ((10 * window.innerHeight) / 44);
+nextBoardC.y = margin;
+app.stage.addChild(myBoardC, holdC, nextBoardC);
 
 var grid:Graphics;
+var nextGrid: Graphics;
 var holdGrid:Graphics;
 var mySocket:number;
 var gridLength:number;
@@ -80,6 +84,15 @@ socket.on("start", (boards: Array<number[][]>, holdDisplay: number[][], numSocke
 	holdC.addChild(holdGrid);
 	holdC.x = myBoardC.x - holdC.width - margin;
 	holdC.y = myBoardC.y;
+
+	let nextBoard:number[][] = boards[(mySocket + 1) % boards.length];
+	// let nextBoard:number[][] = board;
+	nextGrid = drawGrid(nextBoard, gridLength);
+	nextBoardC.addChild(nextGrid);
+
+	console.log("aaaaaaaaaaaaaaaaaaaaaaaaaa");
+	console.log(mySocket);
+	console.log((mySocket + 1) % boards.length);
 });
 
 let state: Map<string, boolean> = new Map<string, boolean>();
@@ -94,8 +107,15 @@ socket.on("updateBoard", (boards:Array<number[][]>, linesLeft:Array<number>) => 
 	linesLeftToClear = linesLeft[mySocket];
 	let board:number[][] = boards[mySocket];
 	myBoardC.removeChild(grid);
-	grid = drawGrid(board, window.innerHeight / (board.length + 2));
+	grid = drawGrid(board, gridLength);
 	myBoardC.addChild(grid);
+
+	let nextBoard:number[][] = boards[(mySocket + 1) % boards.length];
+	// let nextBoard:number[][] = board;
+	nextBoardC.removeChild(nextGrid);
+	nextGrid = drawGrid(nextBoard, gridLength);
+	nextBoardC.addChild(nextGrid);
+
 });
 
 socket.on("updateHold", (holdDisplay:number[][]) => {
