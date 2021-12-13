@@ -36,9 +36,17 @@ Simply open the command-line, navigate to the CutTris Folder, and run the follow
 python3 generate_config.py
 ```
 
-Then, follow the instructions on screen.
+This will create a file named .env that contains the port and IP address on which CutTris will be run.
 
-It will ask for four inputs, and you can leave each one blank to use default values.
+Advanced users may customize their 
+[delayed auto shift and auto repeat rate](https://harddrop.com/wiki/DAS) 
+by opening the .env file in a text editor and adding the following lines to the bottom:
+```
+DAS={das}
+ARR={arr}
+```
+Remember to replace {das} and {arr} with positive integer values.
+
 
 # Running the Project
 To locally run CutTris, navigate into the project directory through your command line and run the following:
