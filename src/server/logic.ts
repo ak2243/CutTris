@@ -57,6 +57,35 @@ export class Logic {
 
     }
 
+	/**
+	* Resets the tetris game that this logic instance controls
+	*/
+	public reset(): void {
+		// first, recreate the board (make a new one and fill it with all zeroes)
+        this.board = new Array<Array<number>>();
+        for (let r: number = 0; r < this.rows; r++) {
+            this.board[r] = new Array<number>();
+            for (let c: number = 0; c < this.cols; c++) {
+                this.board[r][c] = 0;
+            }
+        }
+
+		// make a new bagmaker
+        this.bagMaker = new BagMaker(7);
+		// reset the queue of pieces
+        this.nextPieces = new Array<number>();
+        for (let i = 0; i < 5; i++) {
+            this.nextPieces.push(this.bagMaker.nextPiece());
+        }
+		// restart the game
+        this.makeNextPiece();
+
+        // reset hold piece and allow swap
+        this.holdPiece = undefined;
+        this.allowHoldSwap = true;
+	}
+
+
     public getLinesLeftToClear(): number {
         return this.linesToWin;
     }
