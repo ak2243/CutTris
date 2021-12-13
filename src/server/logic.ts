@@ -37,8 +37,27 @@ export class Logic {
         }
         this.makeNextPiece();
         this.allowHoldSwap = true;
+    }
 
-        // var myTimer = setInterval(passiveFalling, 1000, this);
+    public reset(): void {
+        this.board = new Array<Array<number>>();
+        for (let r: number = 0; r < this.rows; r++) {
+            this.board[r] = new Array<number>();
+            for (let c: number = 0; c < this.cols; c++) {
+                this.board[r][c] = 0;
+            }
+        }
+
+        this.bagMaker = new BagMaker(7);
+        this.nextPieces = new Array<number>();
+        for (let i = 0; i < 5; i++) {
+            this.nextPieces.push(this.bagMaker.nextPiece());
+        }
+        this.makeNextPiece();
+
+        // reset hold piece and allow swap
+        this.holdPiece = undefined;
+        this.allowHoldSwap = true;
     }
 
     public getLinesLeftToClear(): number {
