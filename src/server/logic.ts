@@ -2,9 +2,6 @@ import { BagMaker } from "./bagMaker";
 import * as Pieces from "./pieces";
 import {getWallkickNormal} from "./wallkicks";
 
-// export function passiveFalling(l: Logic): void {
-//     l.movePieceVertical(false);
-// }
 
 export class Logic {
     declare private board: number[][];
