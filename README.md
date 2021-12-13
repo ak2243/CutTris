@@ -9,22 +9,15 @@ The name *CutTris* is an homage to our first project,
 
 # Installation and Set-Up
 ## Pre-Requisites
+- A computer with a display that has a resolution of at least 720p
+- A functioning internet connection
+- [Chrome](https://www.google.com/chrome/) or [Firefox](https://www.mozilla.org/en-US/firefox/new/)
+	- Other browsers may not work
+	- Please configure your browser to allow pop-ups (at least on the page that opens when CutTris launches)
+- [Node.js and npm](https://nodejs.org/en/)
+- [Python 3](https://www.python.org/downloads/) ***(very strongly recommended)***
 
-To run Cut Code, you need a computer and a functioning internet connection.
-
-You also need a browser (we strongly recommend Chrome or Firefox) and allow pop-ups.
-
-Additionally, you need to install node.js and npm.
-
-These can be downloaded on the [node js website](https://nodejs.org/en/).
-
-
-Moreover, we strongly recommend that you install python 3, which can be downloaded on the
-[python website](https://www.python.org/downloads/).
-
-Advanced users may be able to install these using a package manager like homebrew or apt.
-
-## Dependencies
+## Installing Dependencies
 Once node and npm are installed, you can install the project dependencies.
 
 Through the commaned line, navigate into the project directory and run the following:
@@ -43,9 +36,17 @@ Simply open the command-line, navigate to the CutTris Folder, and run the follow
 python3 generate_config.py
 ```
 
-Then, follow the instructions on screen.
+This will create a file named .env that contains the port and IP address on which CutTris will be run.
 
-It will ask for four inputs, and you can leave each one blank to use default values.
+Advanced users may customize their 
+[delayed auto shift and auto repeat rate](https://harddrop.com/wiki/DAS) 
+by opening the .env file in a text editor and adding the following lines to the bottom:
+```
+DAS={das}
+ARR={arr}
+```
+Remember to replace {das} and {arr} with positive integer values.
+
 
 # Running the Project
 To locally run CutTris, navigate into the project directory through your command line and run the following:
@@ -53,12 +54,12 @@ To locally run CutTris, navigate into the project directory through your command
 npm run start
 ```
 
-You should get a console output along the lines of:
+In the command-line, the program should output something like:
 ```
 Listening on http://{ip}:{port}
 ```
 
-Open the url in a browser it gives you to launch CutTris.
+Copy the url and open it in either Chrome or Firefox to launch CutTris.
 
 If you are launching CutTris from the same machine that you're running the server, you may 
 be able to connect to the application by opening [http://localhost:3000](http://localhost:300) in your browser.
@@ -74,7 +75,7 @@ The one on the left represents your board, and the one on the right represents
 your opponent. You will see a box on the left of your board; this box will display 
 your currently held piece (starts off with no piece).
 
-When your opponent connects, they will be abel to control their board and you will 
+When your opponent connects, they will be able to control their board and you will 
 see their actions live.
 
 The first user to clear 40 lines will win. Alternatively, a player
@@ -100,3 +101,14 @@ that started the game will be filled first.
 - Rotate Piece Left -- `z`
 - Rotate Piece Right -- `x`
 - (Swap) Hold Piece -- `c`
+
+# Known Limitations
+- The server can only handle one two-player game at a time
+- There are no [wallkick style rotations](https://tetris.wiki/Super_Rotation_System#Wall_Kicks) for line pieces
+- The game does not tell you how many lines you have cleared and how many more you need to clearn in order towin
+
+# The Creators of CutTris
+CutTris is a project created by Peter Timpane and Arjun Khanna.
+If you have any questions, feel free to email either of us:
+- Peter: [petert2022@headroyce.org](mailto:petert2022@headroyce.org)
+- Arjun: [arjunk2022@headroyce.org](mailto:arjunk2022@headroyce.org)
