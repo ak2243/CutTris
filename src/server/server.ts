@@ -73,7 +73,7 @@ function startGame(): void {
  * Given an array of Logic objects, return an array with all of their boards (these can then be processed by client)
  * 
  * @param logics the array of logic objects that you would like to get the boards of
- * @returns 
+ * @returns the boards of all the logic instances
  */
 function getBoards(logics: Logic[]): Array<number[][]> {
     let boards:Array<number[][]> = new Array<number[][]>();
