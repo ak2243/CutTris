@@ -6,8 +6,8 @@ import { io } from "socket.io-client";
 const socket = io();
 
 let margin:number = 30;
-let das:number = +process.env.DAS;
-let arr:number = +process.env.ARR;
+let das:number = +process.env.DAS || 133;
+let arr:number = +process.env.ARR || 10;
 
 const pieceColors: number[] =
 		[0xa1a1a1,//0 = open

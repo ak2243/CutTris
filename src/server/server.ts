@@ -2,8 +2,8 @@ import * as express from "express";
 import * as socketio from "socket.io";
 
 // Get ip address of machine and port from .env file
-const port = +process.env.PORT;
-const ip = process.env.IP;
+const port = +process.env.PORT || 3000;
+const ip = process.env.IP || "localhost";
 
 // initialize application
 const app = express();
