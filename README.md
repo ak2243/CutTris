@@ -60,6 +60,9 @@ Listening on http://{ip}:{port}
 
 Open the url in a browser it gives you to launch CutTris.
 
+If you are launching CutTris from the same machine that you're running the server, you may 
+be able to connect to the application by opening [http://localhost:3000](http://localhost:300) in your browser.
+
 # Playing the Game
 ## Basic Gameplay
 This section requires a basic knowledge of the game Tetris. 

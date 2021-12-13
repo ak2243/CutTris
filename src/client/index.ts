@@ -3,7 +3,7 @@ import { Graphics } from '@pixi/graphics';
 import { Application, defaultVertex } from 'pixi.js';
 import { io } from "socket.io-client";
 
-const socket = io(`http://${process.env.IP}:${process.env.PORT}/`);
+const socket = io();
 
 let margin:number = 30;
 let das:number = +process.env.DAS;

@@ -17,7 +17,7 @@ const httpServer = createServer(app);
 const io = new socketio.Server(httpServer);
 
 // tell the server where to listen
-httpServer.listen(port, "0.0.0.0", () => {
+httpServer.listen(port, () => {
     console.log(`Listening on http://${ip}:${port}`);
 });
 
