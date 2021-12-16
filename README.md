@@ -98,7 +98,7 @@ that started the game will be filled first.
 - Hard Drop -- `[Space]`
 - Soft Drop -- `[Down Arrow]`
 - Move Piece Left -- `[Left Arrow]`
-- Move Piece Right --`Right Arrow]`
+- Move Piece Right --`[Right Arrow]`
 - Rotate Piece Left -- `z`
 - Rotate Piece Right -- `x`
 - (Swap) Hold Piece -- `c`
@@ -106,10 +106,12 @@ that started the game will be filled first.
 # Known Limitations
 - The server can only handle one two-player game at a time
 - There are no [wallkick style rotations](https://tetris.wiki/Super_Rotation_System#Wall_Kicks) for line pieces
-- The game does not tell you how many lines you have cleared and how many more you need to clearn in order towin
+- The game does not tell you how many lines you have cleared and how many more you need to clearn in order to win
+- A fast series of inputs may lead to network lag
 
 # The Creators of CutTris
 CutTris is a project created by Peter Timpane and Arjun Khanna.
 If you have any questions, feel free to email either of us:
+
 - Peter: [petert2022@headroyce.org](mailto:petert2022@headroyce.org)
 - Arjun: [arjunk2022@headroyce.org](mailto:arjunk2022@headroyce.org)
