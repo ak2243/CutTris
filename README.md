@@ -73,7 +73,8 @@ If you would like extra resources for this, we recommend reading through
 When you open up the tetris website, you will be greeted by two tetris boards.
 The one on the left represents your board, and the one on the right represents 
 your opponent. You will see a box on the left of your board; this box will display 
-your currently held piece (starts off with no piece).
+your currently held piece (starts off with no piece). You will also see a queue of the 
+next five pieces that will be spawned.
 
 When your opponent connects, they will be able to control their board and you will 
 see their actions live.
