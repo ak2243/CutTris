@@ -62,6 +62,7 @@ function startGame(): void {
             }
         });
         allLogics.push(logic); // add logic instance to array
+        activeLogics.push(null); // connected users replace null with the actual board
     }
     boardsUpdateTimer = setInterval(updateBoards, 20, allLogics);
     // Every 20 milliseconds, socketio sends out update board events
@@ -86,31 +87,26 @@ function getBoards(logics: Logic[]): Array<number[][]> {
 
 // what needs to happen when a user connects
 io.on("connection", function (socket: any) {
-    console.log("user connected");
-
     var mySocketIndex:number;
     if (allLogics.length == 0) { // this means this is our first connection
         startGame();
     }
-    // We may not have space for the user.
-    // Alternatively, the user might be able to fill the spot of a previously disconnected player.
-    if (activeLogics.length >= playerLimit) {
-        // First, check if there are any disconnected users 
-        for (let i: number = 0; i < activeLogics.length; i++) {
-            if (activeLogics[i] == null) {
-                mySocketIndex = i; // user can take this spot
-                break;
-            }
+
+    // the user should fill the first null spot in activeLogics
+    for (let i: number = 0; i < activeLogics.length; i++) {
+        if (activeLogics[i] == null) {
+            mySocketIndex = i; // user can take this spot
+            break;
         }
-        // if no disconnected users, deny connection request
-        if (mySocketIndex == undefined) {
-            socket.emit("deny");
-            return;
-        }
-    } else {
-        // if this is the first or second connection, we don't 
-        mySocketIndex = activeLogics.length;
     }
+
+    // there might be no open spots in the game if two players have connected
+    if (mySocketIndex == undefined) {
+        socket.emit("deny");
+        return;
+    }
+
+    // define logic variables based on the index we jsut got
     activeLogics[mySocketIndex] = allLogics[mySocketIndex];
     let playerLogic: Logic = allLogics[mySocketIndex];
 

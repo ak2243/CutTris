@@ -1,9 +1,16 @@
-export abstract class Tetromino {
-    declare orientation: number;
-    declare rotations: number[][][];
-    declare pieceType:number;
 
-    constructor() {
+export abstract class Tetromino {
+    /**
+     * @author Peter Timpane
+     * The abstract class for all pieces.
+     * 
+     */
+    
+    declare orientation: number;//The current rotation
+    declare rotations: number[][][];//The four possible orientations for the piece
+    declare pieceType:number;//The piece's number
+
+    constructor() {//All pieces start in default position
         this.orientation = 0;
     }
 
@@ -25,8 +32,14 @@ export abstract class Tetromino {
     
 }
 
+/*
+All piece rotations are defined from a center block. 
+Each block is defined by a vector from the center block
+
+*/
 export class Line extends Tetromino {
     override pieceType = 1
+
 
     override rotations = [//Square only has one orientation
         [
