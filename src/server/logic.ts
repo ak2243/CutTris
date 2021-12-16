@@ -20,7 +20,11 @@ export class Logic {
     declare private allowHoldSwap: boolean;//Whether or not the player is allowed to swap
     declare private nextPieces: number[];//The next 5 pieces
     declare private gameOver: Function;//The function to run when the game is over
+    declare private onPiecePlaced: Function;//Function run when a piece is placed
     declare private linesToWin: number;//How many lines need to be cleared for the game to be over
+    declare private lastRow: number;//The previous position's row
+    declare private lastCol: number;//The previous position's col
+    declare private softDropCounter: number;//Keep track of number of softdrops to place pieces
 
     constructor(rows: number, columns: number, linesToWin:number, gameOver: Function) {
         /**
@@ -57,6 +61,14 @@ export class Logic {
 
     }
 
+    /**
+     * 
+     * @param onPiecePlaced a function that logic should run every time a piece is placed
+     */
+    public setOnPiecePlaced(onPiecePlaced: Function): void {
+        this.onPiecePlaced = onPiecePlaced;
+    }
+
 	/**
 	* Resets the tetris game that this logic instance controls
 	*/
@@ -84,6 +96,38 @@ export class Logic {
         this.holdPiece = undefined;
         this.allowHoldSwap = true;
 	}
+
+    public getNextPieces():number[][] {
+        let rows:number = 4 * this.nextPieces.length;
+        let cols:number = 4;
+        let ret:number[][] = new Array<Array<number>>(cols);
+        for(let i = 0; i < rows; i++) {
+            let currRow = new Array<number>(cols);
+            for(let j = 0; j < cols; j++) {
+                currRow[j] = 0;
+            }
+            ret[i] = currRow;
+        }
+
+
+        let currRow = 2;
+        let currCol = 2;
+        for(let num of this.nextPieces) {
+            
+            let piece: Pieces.Tetromino = this.getPiece(num);
+    
+            //Draw from row 2 columns 2, zero indexed
+            for (let block of piece.getLayout()) {
+                ret[currRow + block[0]][currCol + block[1]] = piece.pieceType;
+            }
+
+            currRow += 4;
+        
+        }
+
+        return ret;
+
+    }
 
 
     public getLinesLeftToClear(): number {
@@ -308,6 +352,7 @@ export class Logic {
         }
     }
 
+    
     public movePieceVertical(hardDrop: boolean): void {
         /**
          * Move the piece vertically. Pieces can only move downwards
@@ -336,6 +381,21 @@ export class Logic {
             this.centerBlockRow = r;
             this.drawCurrPiece();
         }
+        
+        if(this.lastRow == this.centerBlockRow && this.lastCol == this.centerBlockCol) {
+            this.softDropCounter++;           
+        } else {
+            this.softDropCounter = 0;
+        }
+
+        if(this.softDropCounter == 5) {
+            this.placePiece();
+            this.softDropCounter = 0;
+        }
+
+        this.lastCol = this.centerBlockCol;
+        this.lastRow = this.centerBlockRow;
+
     }
 
     private placePiece(): void {
@@ -345,10 +405,15 @@ export class Logic {
         this.makeNextPiece();
         this.allowHoldSwap = true;
 
+        if (this.onPiecePlaced) {
+            this.onPiecePlaced();
+        }
         //If the lines have been cleared, they win!
         if (this.linesToWin <= 0) {
             this.gameOver(true);
         }
+
+        
     }
 
     public swapHold(): boolean {
@@ -436,7 +501,6 @@ export class Logic {
                 for (let x = 0; x < this.cols; x++) {
                     blankLine[x] = 0;
                 }
-                console.log(blankLine);
                 this.board.unshift(blankLine);
                 this.linesToWin--;
             }

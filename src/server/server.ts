@@ -13,6 +13,7 @@ app.use(express.static('static'));
 // initialize server
 import { createServer } from "http";
 import { Logic } from "./logic";
+import { Socket } from "socket.io-client";
 const httpServer = createServer(app);
 const io = new socketio.Server(httpServer);
 
@@ -113,7 +114,14 @@ io.on("connection", function (socket: any) {
     activeLogics[mySocketIndex] = allLogics[mySocketIndex];
     let playerLogic: Logic = allLogics[mySocketIndex];
 
-    socket.emit("start", getBoards(allLogics), playerLogic.getHoldPiece(), mySocketIndex, linesToWin);
+    // Need to tell logic to update the next queue with every piece placement
+    playerLogic.setOnPiecePlaced(() => {
+        socket.emit("updateNext", playerLogic.getNextPieces());
+        // Since this only impacts one client, we need to define it in io.on("connection")
+    })
+
+    socket.emit("start", getBoards(allLogics), playerLogic.getHoldPiece(), 
+    playerLogic.getNextPieces(), mySocketIndex, linesToWin);
 
     // set value in array to null if user disconnects
     socket.on("disconnect", () => {
